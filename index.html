@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mystical Stories — The Ultimate Experience</title>
+<style>
+  :root{
+    --bg1:#0a1120; /* deep space blue */
+    --bg2:#0f1a2f; /* deep blue base */
+    --accent1:#1a365d; /* primary blue */
+    --accent2:#1e4d3f; /* mystical green */
+    --accent3:#ff7a18; /* sunset orange */
+    --accent4:#38b2ac; /* teal water */
+    --accent5:#9f7aea; /* mystical purple */
+    --light:#f0f9ff;
+    --muted:rgba(240,249,255,0.85);
+    --glass: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.08);
+    --transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --shadow-soft: 0 8px 32px rgba(2,8,20,0.1);
+    --shadow-medium: 0 15px 35px rgba(2,8,20,0.15);
+  }
+
+  /* Theme modifiers */
+  body{
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    margin:0;
+    min-height:100vh;
+    background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, #152642 100%);
+    color:var(--light);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Water reflection effect */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(56, 178, 172, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(31, 117, 184, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(159, 122, 234, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(56, 178, 172, 0.2);
+    animation: float 20s infinite linear;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Orange theme adjustments */
+  body.theme-orange{
+    --accent2:#ff7a18;
+    background: linear-gradient(135deg,#0e1520 0%, #1f0f08 50%, #3a1c0a 100%);
+  }
+
+  body.theme-orange::before {
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 122, 24, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 154, 68, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 183, 77, 0.08) 0%, transparent 50%);
+  }
+
+  body.theme-orange .particle {
+    background: rgba(255, 154, 68, 0.2);
+  }
+
+  .app{
+    max-width:1200px;
+    margin:0 auto;
+    padding:20px;
+    box-sizing:border-box;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Landing Screen - Completely Redesigned */
+  #landing-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .landing-card{
+    width:100%;
+    max-width:900px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-radius:24px;
+    padding:50px 40px;
+    box-shadow: 
+      0 25px 50px rgba(2,6,23,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: cardEntrance 1s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
+  }
+
+  @keyframes cardEntrance {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .landing-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(56, 178, 172, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(31, 117, 184, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .logo{
+    font-weight:600;
+    letter-spacing:3px;
+    font-size:42px;
+    color:var(--light);
+    margin-bottom:15px;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent4), transparent);
+    border-radius: 3px;
+  }
+
+  .intro-text{
+    color:var(--muted);
+    margin-bottom:30px;
+    line-height:1.7;
+    font-size:18px;
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .controls-row{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    justify-content: center;
+    flex-wrap:wrap;
+    margin-top: 30px;
+  }
+
+  .enter-button{
+    background: linear-gradient(135deg, var(--accent4) 0%, var(--accent2) 100%);
+    padding:16px 32px;
+    border-radius:50px;
+    border:none;
+    color:var(--light);
+    font-weight:700;
+    cursor:pointer;
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition);
+    font-size:16px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .enter-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: var(--transition-slow);
+    z-index: -1;
+  }
+
+  .enter-button:hover::before {
+    left: 100%;
+  }
+
+  .enter-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(2,6,23,0.4);
+  }
+
+  .enter-button:active{
+    transform:translateY(1px);
+  }
+
+  .small-btn{
+    background: rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:10px 16px;
+    border-radius:10px;
+    color:var(--light);
+    cursor:pointer;
+    transition: var(--transition);
+    font-size:14px;
+    backdrop-filter: blur(10px);
+  }
+
+  .small-btn:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+  }
+
+  .pulse{
+    animation: pulse 2.5s infinite;
+  }
+
+  @keyframes pulse{
+    0% {
+      box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.6);
+    }
+    70% {
+      box-shadow: 0 0 0 20px rgba(56, 178, 172, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(56, 178, 172, 0);
+    }
+  }
+
+  /* Header - Enhanced */
+  header.app-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 0;
+    position:sticky;
+    top:0;
+    z-index:40;
+    background: linear-gradient(180deg, rgba(10,17,32,0.9) 0%, rgba(10,17,32,0.7) 100%);
+    backdrop-filter: blur(15px);
+    border-bottom:1px solid var(--glass-border);
+    margin-bottom: 20px;
+    border-radius: 0 0 15px 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .site-title{
+    font-size:20px;
+    color:var(--light);
+    letter-spacing:1.5px;
+    font-weight: 600;
+  }
+
+  .header-actions{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+
+  /* Layout - Enhanced */
+  .layout{
+    display:flex;
+    gap:25px;
+    padding:25px 0;
+  }
+
+  .side{
+    width:320px;
+    min-width:280px;
+    max-height:calc(100vh - 150px);
+    overflow:auto;
+    padding:20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-radius:18px;
+    border:1px solid var(--glass-border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(15px);
+    position: sticky;
+    top: 100px;
+  }
+
+  .side::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .side::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+  }
+
+  .side::-webkit-scrollbar-thumb {
+    background: var(--accent4);
+    border-radius: 10px;
+  }
+
+  .content{
+    flex:1;
+    min-height:70vh;
+    padding:30px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    border-radius:18px;
+    border:1px solid var(--glass-border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(15px);
+    transition: var(--transition);
+  }
+
+  .chapter-item{
+    padding:16px;
+    border-radius:12px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition: var(--transition);
+    border-left:4px solid transparent;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid transparent;
+  }
+
+  .chapter-item:hover{
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    transform: translateX(5px);
+  }
+
+  .chapter-item.active{
+    background: linear-gradient(135deg, rgba(56,178,172,0.15) 0%, rgba(30,77,63,0.1) 100%);
+    border-left:4px solid var(--accent4);
+    border: 1px solid rgba(56,178,172,0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .chapter-title{
+    font-size:28px;
+    margin-bottom:20px;
+    color:var(--light);
+    font-weight: 600;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .chapter-text{
+    color:var(--muted);
+    line-height:1.8;
+    white-space:pre-wrap;
+    font-size: 17px;
+  }
+
+  .chapter-text p {
+    margin-bottom: 20px;
+  }
+
+  .placeholder{
+    color:rgba(255,255,255,0.4);
+    text-align:center;
+    padding:80px 20px;
+    font-size:18px;
+  }
+
+  .search{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+  }
+
+  .search input{
+    flex:1;
+    padding:12px 16px;
+    border-radius:12px;
+    border:1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
+    color:var(--light);
+    font-size:14px;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+  }
+
+  .search input:focus {
+    outline: none;
+    border-color: var(--accent4);
+    box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+  }
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+
+  .upcoming{
+    margin-top:20px;
+    padding:20px;
+    border-radius:12px;
+    background: rgba(255,255,255,0.03);
+    border:1px dashed rgba(255,255,255,0.08);
+  }
+
+  .episodes-list{
+    list-style:none;
+    padding-left:0;
+    margin:15px 0 0 0;
+  }
+
+  /* Overlay & mobile */
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(2,8,20,0.7);
+    display:none;
+    z-index:30;
+    backdrop-filter: blur(5px);
+  }
+
+  .overlay.show{
+    display:block;
+  }
+
+  @media(max-width:900px){
+    .layout{
+      flex-direction:column;
+    }
+    .side{
+      width:100%;
+      max-height:none;
+      position: static;
+    }
+    .landing-card {
+      padding: 30px 20px;
+    }
+    .logo {
+      font-size: 32px;
+    }
+  }
+
+  /* Footer small */
+  .footer-note{
+    font-size:12px;
+    color:rgba(255,255,255,0.4);
+    margin-top:15px;
+    text-align: center;
+  }
+
+  /* Water waves effect */
+  .water-waves {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" fill="%2338b2ac22"><path d="M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113 0 1200 0H0z" /></svg>');
+    background-size: 1200px 100px;
+    animation: wave 12s linear infinite;
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  .water-waves:nth-child(2) {
+    animation-duration: 16s;
+    opacity: 0.4;
+    background-size: 1100px 100px;
+    bottom: 10px;
+  }
+
+  .water-waves:nth-child(3) {
+    animation-duration: 20s;
+    opacity: 0.2;
+    background-size: 1000px 100px;
+    bottom: 20px;
+  }
+
+  @keyframes wave {
+    0% {
+      background-position-x: 0;
+    }
+    100% {
+      background-position-x: 1200px;
+    }
+  }
+
+  /* Content fade-in animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  /* Status indicator */
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent4);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+  }
+
+  /* Water droplet animation for active chapter */
+  .water-droplet {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+  }
+
+  .water-droplet::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(56, 178, 172, 0.2) 0%, transparent 70%);
+    border-radius: inherit;
+    animation: droplet-ripple 1.5s ease-out;
+  }
+
+  @keyframes droplet-ripple {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Water waves -->
+  <div class="water-waves"></div>
+  <div class="water-waves"></div>
+  <div class="water-waves"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles-container"></div>
+
+  <div class="app">
+    <!-- Landing -->
+    <section id="landing-screen">
+      <div class="landing-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:30px">
+          <div style="flex:1;min-width:300px">
+            <div class="logo">MYSTICAL STORIES</div>
+            <div id="intro-text" class="intro-text">Mergulhe em histórias místicas que flutuam entre o real e o sobrenatural, onde cada capítulo é uma ondulação no vasto oceano do destino...</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+            <div style="display:flex;gap:10px">
+              <button id="theme-toggle" class="small-btn" title="Alternar tema">🌙 Toggle Theme</button>
+              <button id="open-sample" class="small-btn" title="Mostrar exemplo de configuração">📄 Sample Config</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:10px">
+              <button id="refresh-chapters" class="small-btn" title="Atualizar capítulos">🔄 Refresh</button>
+              <button id="enter-button" class="enter-button pulse">✨ Enter the Stories</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="upcoming">
+          <strong style="color:var(--accent4);font-size:18px">Próximos Episódios</strong>
+          <ul id="episode-list" class="episodes-list"><li style="color:rgba(255,255,255,0.5)">Carregando...</li></ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- App main -->
+    <header class="app-header" style="display:none" id="app-header">
+      <div class="site-title">Mystical Stories</div>
+      <div class="header-actions">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.7)" id="status-label">Pronto</div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-app" style="display:none">
+      <div class="layout">
+        <aside class="side" id="sidebar">
+          <div class="search">
+            <input id="search-input" placeholder="Buscar nos capítulos..." aria-label="buscar capítulos" />
+            <button id="clear-search" class="small-btn">Limpar</button>
+          </div>
+
+          <div class="toolbar">
+            <button id="btn-refresh" class="small-btn">🔄 Atualizar</button>
+            <button id="btn-prefetch" class="small-btn" title="Pré-carregar próximo capítulo">⏭️ Pré-carregar</button>
+            <button id="btn-toggle-markdown" class="small-btn">📝 Markdown: ativo</button>
+          </div>
+
+          <div id="chapters-container">
+            <div class="placeholder" id="chapters-placeholder">Nenhum capítulo carregado — clique em "Atualizar" para procurar TXT*.json</div>
+            <ul id="chapter-list" style="list-style:none;padding-left:0;margin-top:0"></ul>
+          </div>
+
+          <div class="upcoming" style="margin-top:20px">
+            <strong style="color:var(--accent4)">Próximos</strong>
+            <ul id="upcoming-small" class="episodes-list"><li style="color:rgba(255,255,255,0.5)">Sem informações</li></ul>
+          </div>
+
+          <div class="footer-note">💡 Dica: coloque arquivos TXT1.json, TXT2.json ... e um config.json na mesma pasta do index.html</div>
+        </aside>
+
+        <section class="content" id="content-area">
+          <div id="chapter-content-area">
+            <div class="placeholder" id="content-placeholder">Selecione um capítulo para começar sua jornada mística...</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="overlay" class="overlay" aria-hidden="true"></div>
+  </div>
+
+<script>
+/*
+  O MELHOR SITE DE HISTÓRIAS MÍSTICAS
+  - Efeitos visuais impressionantes com partículas e ondas
+  - Design glassmorphism aprimorado
+  - Transições suaves e animações fluidas
+  - Tema aquático imersivo
+  - UX refinada com feedback visual
+*/
+
+/* ---------- Configurações ---------- */
+const MAX_SCAN = 100;        // quantos arquivos TXT# tentar escanear
+const SCAN_BATCH = 6;        // quantas buscas simultâneas executar
+const AUTO_MARKDOWN = true;  // converter markdown simples por padrão
+
+/* ---------- Estado ---------- */
+let config = {};
+let stories = []; // {id, title, content, raw, loaded}
+let current = null;
+let useMarkdown = AUTO_MARKDOWN;
+
+/* ---------- Elementos ---------- */
+const landingScreen = document.getElementById('landing-screen');
+const enterButton = document.getElementById('enter-button');
+const appHeader = document.getElementById('app-header');
+const mainApp = document.getElementById('main-app');
+const chapterListEl = document.getElementById('chapter-list');
+const chaptersPlaceholder = document.getElementById('chapters-placeholder');
+const contentArea = document.getElementById('chapter-content-area');
+const contentPlaceholder = document.getElementById('content-placeholder');
+const episodeList = document.getElementById('episode-list');
+const upcomingSmall = document.getElementById('upcoming-small');
+const introText = document.getElementById('intro-text');
+const statusLabel = document.getElementById('status-label');
+const refreshButton = document.getElementById('btn-refresh');
+const refreshLanding = document.getElementById('refresh-chapters');
+const themeToggle = document.getElementById('theme-toggle');
+const openSample = document.getElementById('open-sample');
+const prefetchBtn = document.getElementById('btn-prefetch');
+const searchInput = document.getElementById('search-input');
+const clearSearch = document.getElementById('clear-search');
+const particlesContainer = document.getElementById('particles-container');
+const themeKey = 'mystical_theme';
+const lastChapterKey = 'mystical_last_chapter';
+const themeOrangeClass = 'theme-orange';
+
+/* ---------- Utilitários ---------- */
+function setStatus(text){
+  statusLabel.textContent = text;
+}
+
+// Criar partículas flutuantes
+function createParticles() {
+  const count = 30;
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    
+    // Tamanho e posição aleatórios
+    const size = Math.random() * 8 + 2;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 20;
+    const duration = 15 + Math.random() * 15;
+    
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${left}%`;
+    particle.style.top = `100%`;
+    particle.style.animationDelay = `${delay}s`;
+    particle.style.animationDuration = `${duration}s`;
+    
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// Converter texto para HTML de forma segura
+function safeTextToHtml(text){
+  // Conversor markdown -> HTML leve e seguro
+  const esc = (s)=> s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if(!useMarkdown) {
+    // Apenas escapar e preservar quebras de linha
+    const lines = esc(text).split(/\n{2,}/).map(p=> `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    return lines;
+  }
+  let t = esc(text);
+
+  // Cabeçalhos: linhas começando com # (1-3)
+  t = t.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+  t = t.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+  t = t.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+  // Negrito **texto**
+  t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Itálico *texto*
+  t = t.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Links [texto](url)
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--accent4); text-decoration: underline;">$1</a>');
+  // Parágrafos
+  t = t.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+  return t;
+}
+
+// Efeito de respingo de água
+function createWaterDropletEffect(element) {
+  const droplet = document.createElement('div');
+  droplet.classList.add('water-droplet');
+  element.appendChild(droplet);
+  
+  setTimeout(() => {
+    element.removeChild(droplet);
+  }, 1500);
+}
+
+/* ---------- Tema salvo ---------- */
+function applySavedTheme(){
+  const saved = localStorage.getItem(themeKey);
+  if(saved === 'orange') document.body.classList.add(themeOrangeClass);
+}
+applySavedTheme();
+
+/* ---------- Carregar config.json ---------- */
+async function loadConfig(){
+  try{
+    const res = await fetch('config.json',{cache:'no-store'});
+    if(!res.ok) throw new Error('config não encontrado');
+    config = await res.json();
+    introText.textContent = config.presentationText || introText.textContent;
+    // Preencher próximos episódios
+    if(Array.isArray(config.upcomingEpisodes) && config.upcomingEpisodes.length){
+      episodeList.innerHTML = '';
+      upcomingSmall.innerHTML = '';
+      config.upcomingEpisodes.forEach(ep=>{
+        const li = document.createElement('li');
+        li.style.display='flex'; 
+        li.style.justifyContent='space-between';
+        li.style.padding = '8px 0';
+        li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        li.innerHTML = `<span style="color:var(--muted)">${ep.episode}</span><span style="color:rgba(255,255,255,0.5)">${ep.date}</span>`;
+        episodeList.appendChild(li);
+        upcomingSmall.appendChild(li.cloneNode(true));
+      });
+    } else {
+      episodeList.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Nenhum episódio anunciado</li>';
+      upcomingSmall.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Nenhum episódio anunciado</li>';
+    }
+  }catch(err){
+    // Fallback
+    config = {};
+    episodeList.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Configuração não encontrada (config.json)</li>';
+    upcomingSmall.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Configuração não encontrada</li>';
+  }
+}
+
+/* ---------- Escanear arquivos TXT*.json ---------- */
+async function scanChapters(){
+  setStatus('Procurando capítulos...');
+  stories = [];
+  chapterListEl.innerHTML = '';
+  chaptersPlaceholder.style.display = 'block';
+  contentPlaceholder.textContent = 'Selecione um capítulo para começar sua jornada mística...';
+  const found = [];
+
+  // Tentar em lotes para evitar muitas buscas simultâneas
+  const tasks = [];
+  for(let i=1;i<=MAX_SCAN;i++){
+    tasks.push(i);
+  }
+
+  // Processar em pequenos lotes concorrentes
+  const concurrency = SCAN_BATCH;
+  for(let i=0;i<tasks.length;i+=concurrency){
+    const batch = tasks.slice(i,i+concurrency).map(async (num)=>{
+      try{
+        const res = await fetch(`TXT${num}.json`, {cache:'no-store'});
+        if(res.ok){
+          const json = await res.json();
+          found.push({id:num, title:json.title||`Capítulo ${num}`, content:json.content||'', raw:json});
+        }
+      }catch(e){
+        // Ignorar arquivos ausentes
+      }
+    });
+    await Promise.all(batch);
+  }
+
+  // Ordenar por ID
+  found.sort((a,b)=> a.id - b.id);
+  stories = found;
+  updateChapterListUI();
+  setStatus(`Encontrados ${stories.length} capítulos`);
+  return stories.length;
+}
+
+/* ---------- Atualizar lista de capítulos na UI ---------- */
+function updateChapterListUI(){
+  chapterListEl.innerHTML = '';
+  if(!stories || stories.length===0){
+    chaptersPlaceholder.style.display = 'block';
+    chapterListEl.style.display = 'none';
+    return;
+  }
+  chaptersPlaceholder.style.display = 'none';
+  chapterListEl.style.display = 'block';
+  stories.forEach(s=>{
+    const li = document.createElement('li');
+    li.className = 'chapter-item';
+    li.dataset.id = s.id;
+    li.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <strong style="font-size:15px">${escapeHtml(s.title)}</strong>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5)">TXT${s.id}.json</div>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4)">${s.id}</div>
+      </div>
+    `;
+    li.addEventListener('click', ()=> {
+      showChapter(s.id);
+      createWaterDropletEffect(li);
+      // Lembrar último capítulo
+      localStorage.setItem(lastChapterKey, s.id);
+    });
+    chapterListEl.appendChild(li);
+  });
+}
+
+/* ---------- Mostrar capítulo ---------- */
+function showChapter(id){
+  const s = stories.find(x=> x.id === Number(id));
+  if(!s) return;
+  // Marcar como ativo
+  document.querySelectorAll('.chapter-item').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.id) === Number(id));
+  });
+
+  // Renderizar conteúdo com segurança (markdown ou texto puro)
+  const html = safeTextToHtml(s.content || '');
+  // Definir innerHTML porque já foi convertido/escapado
+  contentArea.innerHTML = `
+    <article class="fade-in">
+      <h2 class="chapter-title">${escapeHtml(s.title)}</h2>
+      <div class="chapter-text">${html}</div>
+    </article>
+  `;
+  current = s.id;
+  setStatus(`Lendo: ${s.title}`);
+  // Pré-carregar próximo
+  prefetchNext(s.id);
+}
+
+/* ---------- Pré-carregar próximo capítulo ---------- */
+async function prefetchNext(id){
+  const nextId = Number(id)+1;
+  // Se já estiver carregado, pular
+  if(stories.some(x=> x.id === nextId)) return;
+  // Tentar buscar mas não adicionar à lista automaticamente
+  try{
+    const res = await fetch(`TXT${nextId}.json`, {cache:'no-store'});
+    if(res.ok){
+      const json = await res.json();
+      // Opcionalmente adicionar silenciosamente
+      stories.push({id: nextId, title: json.title || `Capítulo ${nextId}`, content: json.content || '', raw: json});
+      stories.sort((a,b)=> a.id - b.id);
+      updateChapterListUI();
+      setStatus(`Pré-carregado capítulo ${nextId}`);
+    }
+  }catch(e){}
+}
+
+/* ---------- Busca simples em títulos e conteúdo ---------- */
+function doSearch(q){
+  q = (q||'').trim().toLowerCase();
+  if(!q){
+    // Mostrar todos
+    Array.from(chapterListEl.children).forEach(li => li.style.display = '');
+    return;
+  }
+  Array.from(chapterListEl.children).forEach(li=>{
+    const id = Number(li.dataset.id);
+    const s = stories.find(x=> x.id === id);
+    const match = (s.title || '').toLowerCase().includes(q) || (s.content || '').toLowerCase().includes(q);
+    li.style.display = match ? '' : 'none';
+  });
+}
+
+/* ---------- Utilitários ---------- */
+function escapeHtml(s){ 
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+}
+
+/* ---------- Configurar eventos ---------- */
+enterButton.addEventListener('click', async ()=>{
+  // Carregar configuração e capítulos e mostrar UI
+  await loadConfig();
+  await scanChapters();
+  // Esconder tela inicial, mostrar app
+  landingScreen.style.display = 'none';
+  appHeader.style.display = 'flex';
+  mainApp.style.display = 'block';
+  // Restaurar último capítulo se presente
+  const last = localStorage.getItem(lastChapterKey);
+  if(last && stories.some(s=> s.id === Number(last))){
+    showChapter(Number(last));
+    // Rolar selecionado para a vista
+    setTimeout(()=> {
+      const el = document.querySelector(`.chapter-item[data-id="${last}"]`);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
+  }
+});
+
+refreshButton.addEventListener('click', async ()=> { 
+  setStatus('Atualizando...'); 
+  await scanChapters(); 
+});
+
+refreshLanding.addEventListener('click', async ()=> { 
+  setStatus('Atualizando...'); 
+  await scanChapters(); 
+});
+
+document.getElementById('btn-prefetch').addEventListener('click', ()=> {
+  if(current) prefetchNext(current);
+  else setStatus('Nenhum capítulo selecionado para pré-carregar');
+});
+
+themeToggle.addEventListener('click', ()=> {
+  const isOrange = document.body.classList.toggle(themeOrangeClass);
+  localStorage.setItem(themeKey, isOrange ? 'orange' : 'default');
+  setStatus(`Tema ${isOrange ? 'laranja' : 'azul'} ativado`);
+});
+
+openSample.addEventListener('click', ()=> {
+  alert('Estrutura de exemplo para config.json:\n\n{\n  "presentationText": "Seu texto introdutório místico aqui",\n  "upcomingEpisodes": [\n    {"date": "2025-12-01", "episode": "Episódio 4"},\n    {"date": "2025-12-10", "episode": "Episódio 5"}\n  ]\n}');
+});
+
+searchInput.addEventListener('input', (e)=> doSearch(e.target.value));
+clearSearch.addEventListener('click', ()=> { 
+  searchInput.value=''; 
+  doSearch(''); 
+  setStatus('Busca limpa');
+});
+
+document.getElementById('btn-toggle-markdown').addEventListener('click', (e)=>{
+  useMarkdown = !useMarkdown;
+  e.target.textContent = '📝 Markdown: ' + (useMarkdown ? 'ativo' : 'inativo');
+  setStatus('Markdown ' + (useMarkdown ? 'ativado' : 'desativado'));
+  // Se um capítulo estiver aberto, renderizar novamente com a nova configuração
+  if(current) {
+    showChapter(current);
+  }
+});
+
+/* ---------- Acessibilidade por teclado ---------- */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'k' && (e.ctrlKey || e.metaKey)){
+    e.preventDefault();
+    searchInput.focus();
+  }
+});
+
+/* ---------- Inicializar elementos de UI ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  applySavedTheme();
+  setStatus('Pronto');
+  createParticles();
+});
+
+/* ---------- Expor uma atualização pública para gatilhos externos (opcional) ---------- */
+window.mystical = {
+  refresh: scanChapters,
+  loadConfig,
+};
+
+/* ---------- Carregamento inicial rápido se o usuário quiser pré-carregar a configuração ---------- */
+loadConfig();
+</script>
+</body>
+</html>
