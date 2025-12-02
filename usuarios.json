@@ -1,0 +1,60 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "nome": "Administrador",
+      "role": "admin",
+      "ativo": true,
+      "bloqueado": false,
+      "data_criacao": "2024-01-01",
+      "ultimo_acesso": null,
+      "mensagem_acesso": "Bem-vindo ao sistema de gestão!"
+    },
+    {
+      "id": 2,
+      "username": "guilhermmkt",
+      "password": "guilhermmkt123",
+      "nome": "Gui Castilho",
+      "role": "vendedor",
+      "ativo": true,
+      "bloqueado": false,
+      "data_criacao": "2025-12-03",
+      "ultimo_acesso": null,
+      "mensagem_acesso": "Acesso liberado para vendas"
+    },
+    {
+      "id": 3,
+      "username": "vendedor2",
+      "password": "venda456",
+      "nome": "Maria do Sorvete",
+      "role": "vendedor",
+      "ativo": true,
+      "bloqueado": false,
+      "data_criacao": "2024-02-01",
+      "ultimo_acesso": null,
+      "mensagem_acesso": "Continue com o bom trabalho!"
+    },
+    {
+      "id": 4,
+      "username": "teste",
+      "password": "teste123",
+      "nome": "Usuário Teste",
+      "role": "vendedor",
+      "ativo": true,
+      "bloqueado": true,
+      "data_criacao": "2024-02-10",
+      "ultimo_acesso": null,
+      "mensagem_acesso": "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
+    }
+  ],
+  "configuracoes": {
+    "bloqueio_automatico": false,
+    "tentativas_maximas": 3,
+    "tempo_bloqueio_minutos": 30,
+    "mensagem_padrao_bloqueio": "Acesso bloqueado. Entre em contato com o administrador."
+  },
+  "log_acessos": [],
+  "ultima_atualizacao": "2024-12-03T10:00:00Z"
+}
