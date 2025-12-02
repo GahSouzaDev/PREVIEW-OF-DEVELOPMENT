@@ -1,1080 +1,2422 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mystical Stories — The Ultimate Experience</title>
-<style>
-  :root{
-    --bg1:#0a1120; /* deep space blue */
-    --bg2:#0f1a2f; /* deep blue base */
-    --accent1:#1a365d; /* primary blue */
-    --accent2:#1e4d3f; /* mystical green */
-    --accent3:#ff7a18; /* sunset orange */
-    --accent4:#38b2ac; /* teal water */
-    --accent5:#9f7aea; /* mystical purple */
-    --light:#f0f9ff;
-    --muted:rgba(240,249,255,0.85);
-    --glass: rgba(255,255,255,0.05);
-    --glass-border: rgba(255,255,255,0.08);
-    --transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --shadow-soft: 0 8px 32px rgba(2,8,20,0.1);
-    --shadow-medium: 0 15px 35px rgba(2,8,20,0.15);
-  }
-
-  /* Theme modifiers */
-  body{
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    margin:0;
-    min-height:100vh;
-    background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, #152642 100%);
-    color:var(--light);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* Water reflection effect */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(56, 178, 172, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(31, 117, 184, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(159, 122, 234, 0.08) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  /* Floating particles */
-  .particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .particle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(56, 178, 172, 0.2);
-    animation: float 20s infinite linear;
-  }
-
-  @keyframes float {
-    0% {
-      transform: translateY(0) translateX(0) rotate(0deg);
-      opacity: 0;
-    }
-    10% {
-      opacity: 1;
-    }
-    90% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-100vh) translateX(100px) rotate(360deg);
-      opacity: 0;
-    }
-  }
-
-  /* Orange theme adjustments */
-  body.theme-orange{
-    --accent2:#ff7a18;
-    background: linear-gradient(135deg,#0e1520 0%, #1f0f08 50%, #3a1c0a 100%);
-  }
-
-  body.theme-orange::before {
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(255, 122, 24, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 154, 68, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(255, 183, 77, 0.08) 0%, transparent 50%);
-  }
-
-  body.theme-orange .particle {
-    background: rgba(255, 154, 68, 0.2);
-  }
-
-  .app{
-    max-width:1200px;
-    margin:0 auto;
-    padding:20px;
-    box-sizing:border-box;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Landing Screen - Completely Redesigned */
-  #landing-screen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    position:relative;
-    overflow:hidden;
-  }
-
-  .landing-card{
-    width:100%;
-    max-width:900px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-    border-radius:24px;
-    padding:50px 40px;
-    box-shadow: 
-      0 25px 50px rgba(2,6,23,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.1);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    position: relative;
-    overflow: hidden;
-    transform: translateY(20px);
-    opacity: 0;
-    animation: cardEntrance 1s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
-  }
-
-  @keyframes cardEntrance {
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .landing-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(56, 178, 172, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(31, 117, 184, 0.05) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .logo{
-    font-weight:600;
-    letter-spacing:3px;
-    font-size:42px;
-    color:var(--light);
-    margin-bottom:15px;
-    text-align: center;
-    position: relative;
-    display: inline-block;
-  }
-
-  .logo::after {
-    content: "";
-    position: absolute;
-    bottom: -8px;
-    left: 10%;
-    width: 80%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--accent4), transparent);
-    border-radius: 3px;
-  }
-
-  .intro-text{
-    color:var(--muted);
-    margin-bottom:30px;
-    line-height:1.7;
-    font-size:18px;
-    text-align: center;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .controls-row{
-    display:flex;
-    gap:15px;
-    align-items:center;
-    justify-content: center;
-    flex-wrap:wrap;
-    margin-top: 30px;
-  }
-
-  .enter-button{
-    background: linear-gradient(135deg, var(--accent4) 0%, var(--accent2) 100%);
-    padding:16px 32px;
-    border-radius:50px;
-    border:none;
-    color:var(--light);
-    font-weight:700;
-    cursor:pointer;
-    box-shadow: var(--shadow-medium);
-    transition: var(--transition);
-    font-size:16px;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .enter-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: var(--transition-slow);
-    z-index: -1;
-  }
-
-  .enter-button:hover::before {
-    left: 100%;
-  }
-
-  .enter-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px rgba(2,6,23,0.4);
-  }
-
-  .enter-button:active{
-    transform:translateY(1px);
-  }
-
-  .small-btn{
-    background: rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.12);
-    padding:10px 16px;
-    border-radius:10px;
-    color:var(--light);
-    cursor:pointer;
-    transition: var(--transition);
-    font-size:14px;
-    backdrop-filter: blur(10px);
-  }
-
-  .small-btn:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateY(-2px);
-  }
-
-  .pulse{
-    animation: pulse 2.5s infinite;
-  }
-
-  @keyframes pulse{
-    0% {
-      box-shadow: 0 0 0 0 rgba(56, 178, 172, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 20px rgba(56, 178, 172, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(56, 178, 172, 0);
-    }
-  }
-
-  /* Header - Enhanced */
-  header.app-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:15px 0;
-    position:sticky;
-    top:0;
-    z-index:40;
-    background: linear-gradient(180deg, rgba(10,17,32,0.9) 0%, rgba(10,17,32,0.7) 100%);
-    backdrop-filter: blur(15px);
-    border-bottom:1px solid var(--glass-border);
-    margin-bottom: 20px;
-    border-radius: 0 0 15px 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .site-title{
-    font-size:20px;
-    color:var(--light);
-    letter-spacing:1.5px;
-    font-weight: 600;
-  }
-
-  .header-actions{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-
-  /* Layout - Enhanced */
-  .layout{
-    display:flex;
-    gap:25px;
-    padding:25px 0;
-  }
-
-  .side{
-    width:320px;
-    min-width:280px;
-    max-height:calc(100vh - 150px);
-    overflow:auto;
-    padding:20px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-    border-radius:18px;
-    border:1px solid var(--glass-border);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(15px);
-    position: sticky;
-    top: 100px;
-  }
-
-  .side::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .side::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-  }
-
-  .side::-webkit-scrollbar-thumb {
-    background: var(--accent4);
-    border-radius: 10px;
-  }
-
-  .content{
-    flex:1;
-    min-height:70vh;
-    padding:30px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-    border-radius:18px;
-    border:1px solid var(--glass-border);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(15px);
-    transition: var(--transition);
-  }
-
-  .chapter-item{
-    padding:16px;
-    border-radius:12px;
-    margin-bottom:10px;
-    cursor:pointer;
-    transition: var(--transition);
-    border-left:4px solid transparent;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid transparent;
-  }
-
-  .chapter-item:hover{
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    transform: translateX(5px);
-  }
-
-  .chapter-item.active{
-    background: linear-gradient(135deg, rgba(56,178,172,0.15) 0%, rgba(30,77,63,0.1) 100%);
-    border-left:4px solid var(--accent4);
-    border: 1px solid rgba(56,178,172,0.2);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-
-  .chapter-title{
-    font-size:28px;
-    margin-bottom:20px;
-    color:var(--light);
-    font-weight: 600;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .chapter-text{
-    color:var(--muted);
-    line-height:1.8;
-    white-space:pre-wrap;
-    font-size: 17px;
-  }
-
-  .chapter-text p {
-    margin-bottom: 20px;
-  }
-
-  .placeholder{
-    color:rgba(255,255,255,0.4);
-    text-align:center;
-    padding:80px 20px;
-    font-size:18px;
-  }
-
-  .search{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-  }
-
-  .search input{
-    flex:1;
-    padding:12px 16px;
-    border-radius:12px;
-    border:1px solid var(--glass-border);
-    background: rgba(255,255,255,0.05);
-    color:var(--light);
-    font-size:14px;
-    transition: var(--transition);
-    backdrop-filter: blur(10px);
-  }
-
-  .search input:focus {
-    outline: none;
-    border-color: var(--accent4);
-    box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
-  }
-
-  .toolbar{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-  }
-
-  .upcoming{
-    margin-top:20px;
-    padding:20px;
-    border-radius:12px;
-    background: rgba(255,255,255,0.03);
-    border:1px dashed rgba(255,255,255,0.08);
-  }
-
-  .episodes-list{
-    list-style:none;
-    padding-left:0;
-    margin:15px 0 0 0;
-  }
-
-  /* Overlay & mobile */
-  .overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(2,8,20,0.7);
-    display:none;
-    z-index:30;
-    backdrop-filter: blur(5px);
-  }
-
-  .overlay.show{
-    display:block;
-  }
-
-  @media(max-width:900px){
-    .layout{
-      flex-direction:column;
-    }
-    .side{
-      width:100%;
-      max-height:none;
-      position: static;
-    }
-    .landing-card {
-      padding: 30px 20px;
-    }
-    .logo {
-      font-size: 32px;
-    }
-  }
-
-  /* Footer small */
-  .footer-note{
-    font-size:12px;
-    color:rgba(255,255,255,0.4);
-    margin-top:15px;
-    text-align: center;
-  }
-
-  /* Water waves effect */
-  .water-waves {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" fill="%2338b2ac22"><path d="M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113 0 1200 0H0z" /></svg>');
-    background-size: 1200px 100px;
-    animation: wave 12s linear infinite;
-    z-index: -1;
-    opacity: 0.6;
-  }
-
-  .water-waves:nth-child(2) {
-    animation-duration: 16s;
-    opacity: 0.4;
-    background-size: 1100px 100px;
-    bottom: 10px;
-  }
-
-  .water-waves:nth-child(3) {
-    animation-duration: 20s;
-    opacity: 0.2;
-    background-size: 1000px 100px;
-    bottom: 20px;
-  }
-
-  @keyframes wave {
-    0% {
-      background-position-x: 0;
-    }
-    100% {
-      background-position-x: 1200px;
-    }
-  }
-
-  /* Content fade-in animation */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .fade-in {
-    animation: fadeInUp 0.6s ease forwards;
-  }
-
-  /* Status indicator */
-  .status-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent4);
-    animation: pulse-dot 2s infinite;
-  }
-
-  @keyframes pulse-dot {
-    0% {
-      opacity: 0.6;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    100% {
-      opacity: 0.6;
-      transform: scale(1);
-    }
-  }
-
-  /* Water droplet animation for active chapter */
-  .water-droplet {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0;
-  }
-
-  .water-droplet::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(56, 178, 172, 0.2) 0%, transparent 70%);
-    border-radius: inherit;
-    animation: droplet-ripple 1.5s ease-out;
-  }
-
-  @keyframes droplet-ripple {
-    0% {
-      transform: scale(0.8);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1.2);
-      opacity: 0;
-    }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraiaVendas | Gestão para Vendedores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #FF9800;
+            --primary-light: #FFB74D;
+            --secondary: #2196F3;
+            --success: #4CAF50;
+            --danger: #F44336;
+            --warning: #FFC107;
+            --dark: #333333;
+            --light: #FFFFFF;
+            --gray: #757575;
+            --beach-blue: #4FC3F7;
+            --beach-sand: #FFECB3;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #FFB74D;
+            --primary-light: #FFCC80;
+            --secondary: #64B5F6;
+            --success: #81C784;
+            --danger: #E57373;
+            --warning: #FFD54F;
+            --dark: #F5F5F5;
+            --light: #121212;
+            --gray: #BDBDBD;
+            --beach-blue: #29B6F6;
+            --beach-sand: #FFD54F;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E3F2FD 0%, #FFF3E0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 100%);
+            color: var(--dark);
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2000;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        [data-theme="dark"] .login-box {
+            background: #1E1E1E;
+        }
+
+        .business-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        .business-name {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .login-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 1rem 0.5rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .business-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .business-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+
+        .business-info h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .business-info span {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tabs-container {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: thin;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 3px;
+            min-width: max-content;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 8px 5px;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main container */
+        .container {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard */
+        .dashboard-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border-top: 5px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .summary-card {
+            background: #1E1E1E;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .summary-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: white;
+            border: 2px solid #E0E0E0;
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Vendas */
+        .sale-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--success);
+        }
+
+        [data-theme="dark"] .sale-card {
+            background: #1E1E1E;
+        }
+
+        .sale-form {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: #FAFAFA;
+            color: var(--dark);
+        }
+
+        [data-theme="dark"] input,
+        [data-theme="dark"] select {
+            background: #2A2A2A;
+            border-color: #444;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: white;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+        }
+
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .sale-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .sale-animation.show {
+            animation: salePop 1s ease forwards;
+        }
+
+        @keyframes salePop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* Produtos */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid #E0E0E0;
+        }
+
+        [data-theme="dark"] .product-card {
+            background: #1E1E1E;
+            border-color: #444;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 150px;
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-stock {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .stock-low {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* Financeiro */
+        .chart-container {
+            height: 300px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .transaction-list {
+            margin-top: 1.5rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .transaction-item {
+            border-color: #444;
+        }
+
+        .transaction-item:hover {
+            background: #F5F5F5;
+        }
+
+        [data-theme="dark"] .transaction-item:hover {
+            background: #2A2A2A;
+        }
+
+        .transaction-type {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .transaction-income {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .transaction-expense {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+        }
+
+        /* Configurações */
+        .settings-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        [data-theme="dark"] .settings-section {
+            background: #1E1E1E;
+        }
+
+        .settings-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 0 3px var(--dark);
+            transform: scale(1.1);
+        }
+
+        .photo-upload {
+            text-align: center;
+            padding: 2rem;
+            border: 2px dashed #E0E0E0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .photo-upload:hover {
+            border-color: var(--primary);
+            background: #F5F5F5;
+        }
+
+        .user-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary);
+        }
+
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: var(--success);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        [data-theme="dark"] .notification {
+            background: #1E1E1E;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-danger {
+            color: var(--danger);
+        }
+
+        .notification-warning {
+            color: var(--warning);
+        }
+
+        .notification-info {
+            color: var(--secondary);
+        }
+
+        /* Modais */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="dark"] .modal-content {
+            background: #1E1E1E;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.8rem;
+            }
+            
+            .dashboard-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+            
+            .business-info h1 {
+                font-size: 1.1rem;
+            }
+            
+            .tab {
+                min-width: 70px;
+                font-size: 0.8rem;
+                padding: 6px 4px;
+            }
+            
+            .header-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-btn {
+                width: 100%;
+            }
+            
+            .business-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+        }
+
+        /* Animações de números */
+        .counting-up {
+            animation: countUp 1s ease-out;
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Efeito de partículas para vendas */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            top: 0;
+            opacity: 0;
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
-  <!-- Water waves -->
-  <div class="water-waves"></div>
-  <div class="water-waves"></div>
-  <div class="water-waves"></div>
-
-  <!-- Floating particles -->
-  <div class="particles" id="particles-container"></div>
-
-  <div class="app">
-    <!-- Landing -->
-    <section id="landing-screen">
-      <div class="landing-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:30px">
-          <div style="flex:1;min-width:300px">
-            <div class="logo">MYSTICAL STORIES</div>
-            <div id="intro-text" class="intro-text">Mergulhe em histórias místicas que flutuam entre o real e o sobrenatural, onde cada capítulo é uma ondulação no vasto oceano do destino...</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
-            <div style="display:flex;gap:10px">
-              <button id="theme-toggle" class="small-btn" title="Alternar tema">🌙 Toggle Theme</button>
-              <button id="open-sample" class="small-btn" title="Mostrar exemplo de configuração">📄 Sample Config</button>
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <img id="businessLogo" class="business-logo" src="" alt="Logo do Negócio">
+            <h1 id="businessNameLogin" class="business-name">PraiaVendas</h1>
+            <input type="text" id="usernameInput" class="login-input" placeholder="Usuário" autocomplete="username">
+            <input type="password" id="passwordInput" class="login-input" placeholder="Senha" autocomplete="current-password">
+            <button id="loginBtn" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> Usuário ou senha incorretos
             </div>
-            <div style="display:flex;gap:10px;margin-top:10px">
-              <button id="refresh-chapters" class="small-btn" title="Atualizar capítulos">🔄 Refresh</button>
-              <button id="enter-button" class="enter-button pulse">✨ Enter the Stories</button>
+        </div>
+    </div>
+
+    <!-- Aplicativo Principal (oculto inicialmente) -->
+    <div id="mainApp" style="display: none;">
+        <header>
+            <div class="header-content">
+                <div class="business-header">
+                    <img id="businessAvatar" class="business-avatar" src="" alt="Avatar">
+                    <div class="business-info">
+                        <h1 id="businessNameHeader">PraiaVendas</h1>
+                        <span id="businessSlogan">Vendas na Praia</span>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="header-btn" id="notificationToggle">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="header-btn" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="header-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="dashboard">
+                            <i class="fas fa-home"></i> Início
+                        </div>
+                        <div class="tab" data-tab="sales">
+                            <i class="fas fa-shopping-cart"></i> Vendas
+                        </div>
+                        <div class="tab" data-tab="products">
+                            <i class="fas fa-box"></i> Produtos
+                        </div>
+                        <div class="tab" data-tab="finance">
+                            <i class="fas fa-chart-line"></i> Financeiro
+                        </div>
+                        <div class="tab" data-tab="settings">
+                            <i class="fas fa-cog"></i> Configurações
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </header>
+
+        <div class="container">
+            <!-- Dashboard -->
+            <section id="dashboard" class="section active">
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="today">Hoje</button>
+                    <button class="filter-btn" data-filter="week">Esta Semana</button>
+                    <button class="filter-btn" data-filter="month">Este Mês</button>
+                    <button class="filter-btn" data-filter="all">Todo Período</button>
+                </div>
+                
+                <div class="dashboard-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="summary-value" id="totalSalesValue">R$ 0,00</div>
+                        <div class="summary-label">Vendas Totais</div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="summary-value" id="totalProductsSold">0</div>
+                        <div class="summary-label">Produtos Vendidos</div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="summary-value" id="averageSale">R$ 0,00</div>
+                        <div class="summary-label">Ticket Médio</div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="summary-value" id="lowStockCount">0</div>
+                        <div class="summary-label">Estoque Baixo</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-trophy"></i> Conquistas</h3>
+                    <div id="achievementsList">
+                        <!-- Conquistas serão carregadas aqui -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Vendas -->
+            <section id="sales" class="section">
+                <div class="sale-card">
+                    <h2><i class="fas fa-cash-register"></i> Nova Venda</h2>
+                    <div class="sale-form">
+                        <div class="form-group">
+                            <label for="productSelect">Produto</label>
+                            <select id="productSelect">
+                                <option value="">Selecione um produto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quantityInput">Quantidade</label>
+                            <input type="number" id="quantityInput" min="1" value="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="priceInput">Preço Unitário (R$)</label>
+                            <input type="number" id="priceInput" min="0.01" step="0.01" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="totalPrice">Total (R$)</label>
+                            <input type="number" id="totalPrice" readonly style="font-weight: bold; color: var(--success);">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <button id="registerSaleBtn">
+                            <i class="fas fa-check"></i> Registrar Venda
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-history"></i> Vendas Recentes</h3>
+                    <div id="recentSalesList">
+                        <!-- Vendas recentes serão carregadas aqui -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Produtos -->
+            <section id="products" class="section">
+                <div class="sale-card">
+                    <h2><i class="fas fa-plus-circle"></i> Adicionar Produto</h2>
+                    <div class="sale-form">
+                        <div class="form-group">
+                            <label for="productName">Nome do Produto</label>
+                            <input type="text" id="productName" placeholder="Ex: Água de Coco, Sorvete...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productCategory">Categoria</label>
+                            <select id="productCategory">
+                                <option value="bebidas">Bebidas</option>
+                                <option value="comidas">Comidas</option>
+                                <option value="sobremesas">Sobremesas</option>
+                                <option value="acessorios">Acessórios</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productPrice">Preço (R$)</label>
+                            <input type="number" id="productPrice" min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productStock">Estoque Inicial</label>
+                            <input type="number" id="productStock" min="1" value="10">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <button id="addProductBtn">
+                            <i class="fas fa-plus"></i> Adicionar Produto
+                        </button>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 1.5rem 0 1rem;"><i class="fas fa-boxes"></i> Meus Produtos</h3>
+                <div class="products-grid" id="productsList">
+                    <!-- Produtos serão carregados aqui -->
+                </div>
+            </section>
+            
+            <!-- Financeiro -->
+            <section id="finance" class="section">
+                <div class="sale-card">
+                    <h2><i class="fas fa-chart-pie"></i> Resumo Financeiro</h2>
+                    <div class="dashboard-summary" style="margin-top: 1rem;">
+                        <div class="summary-card">
+                            <div class="summary-icon">
+                                <i class="fas fa-money-bill"></i>
+                            </div>
+                            <div class="summary-value" id="totalRevenue">R$ 0,00</div>
+                            <div class="summary-label">Receita Total</div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-icon">
+                                <i class="fas fa-sack-dollar"></i>
+                            </div>
+                            <div class="summary-value" id="profitValue">R$ 0,00</div>
+                            <div class="summary-label">Lucro Estimado</div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-icon">
+                                <i class="fas fa-trend-up"></i>
+                            </div>
+                            <div class="summary-value" id="bestProduct">-</div>
+                            <div class="summary-label">Produto Mais Vendido</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="financeChart"></canvas>
+                </div>
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-download"></i> Exportar Dados</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button id="exportSalesBtn" class="secondary">
+                            <i class="fas fa-file-csv"></i> Exportar Vendas (CSV)
+                        </button>
+                        <button id="exportProductsBtn" class="secondary">
+                            <i class="fas fa-file-excel"></i> Exportar Produtos (Excel)
+                        </button>
+                        <button id="exportFinanceBtn" class="secondary">
+                            <i class="fas fa-file-pdf"></i> Relatório Financeiro (PDF)
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configurações -->
+            <section id="settings" class="section">
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-store"></i> Informações do Negócio</h3>
+                    <div class="form-group">
+                        <label for="businessNameInput">Nome do Negócio</label>
+                        <input type="text" id="businessNameInput" placeholder="Nome do seu negócio">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="businessSloganInput">Slogan ou Descrição</label>
+                        <input type="text" id="businessSloganInput" placeholder="Ex: As melhores águas de coco da praia!">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Foto do Negócio</label>
+                        <div class="photo-upload" id="photoUpload">
+                            <img id="businessPhotoPreview" class="user-photo" src="" alt="Foto do Negócio">
+                            <p>Clique para alterar a foto</p>
+                            <input type="file" id="businessPhotoInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <button id="saveBusinessInfoBtn">
+                        <i class="fas fa-save"></i> Salvar Informações
+                    </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-palette"></i> Personalização</h3>
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background-color: #FF9800;" data-color="#FF9800"></div>
+                        <div class="color-option" style="background-color: #2196F3;" data-color="#2196F3"></div>
+                        <div class="color-option" style="background-color: #4CAF50;" data-color="#4CAF50"></div>
+                        <div class="color-option" style="background-color: #9C27B0;" data-color="#9C27B0"></div>
+                        <div class="color-option" style="background-color: #FF5722;" data-color="#FF5722"></div>
+                        <div class="color-option" style="background-color: #00BCD4;" data-color="#00BCD4"></div>
+                        <div class="color-option" style="background-color: #FF4081;" data-color="#FF4081"></div>
+                        <div class="color-option" style="background-color: #3F51B5;" data-color="#3F51B5"></div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-user-shield"></i> Segurança</h3>
+                    <div class="form-group">
+                        <label for="newUsername">Novo Usuário</label>
+                        <input type="text" id="newUsername" placeholder="Novo nome de usuário">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newPassword">Nova Senha</label>
+                        <input type="password" id="newPassword" placeholder="Nova senha">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmar Senha</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirmar nova senha">
+                    </div>
+                    
+                    <button id="changeCredentialsBtn">
+                        <i class="fas fa-key"></i> Alterar Credenciais
+                    </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-bell"></i> Notificações e Sons</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Sons de Venda</span>
+                            <label class="switch">
+                                <input type="checkbox" id="saleSoundsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Notificações de Estoque Baixo</span>
+                            <label class="switch">
+                                <input type="checkbox" id="stockNotificationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Animações</span>
+                            <label class="switch">
+                                <input type="checkbox" id="animationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title"><i class="fas fa-database"></i> Gerenciamento de Dados</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <button id="backupDataBtn" class="secondary">
+                            <i class="fas fa-save"></i> Fazer Backup
+                        </button>
+                        <button id="restoreDataBtn" class="secondary">
+                            <i class="fas fa-undo"></i> Restaurar Backup
+                        </button>
+                        <button id="resetDataBtn" class="danger">
+                            <i class="fas fa-trash"></i> Limpar Todos os Dados
+                        </button>
+                    </div>
+                </div>
+            </section>
         </div>
+    </div>
 
-        <div class="upcoming">
-          <strong style="color:var(--accent4);font-size:18px">Próximos Episódios</strong>
-          <ul id="episode-list" class="episodes-list"><li style="color:rgba(255,255,255,0.5)">Carregando...</li></ul>
+    <!-- Notificações -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Operação realizada com sucesso!</span>
+    </div>
+
+    <!-- Animação de venda -->
+    <div class="sale-animation" id="saleAnimation">
+        <i class="fas fa-money-bill-wave"></i>
+    </div>
+
+    <!-- Modal de Cookies -->
+    <div class="modal" id="cookieModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Privacidade e Armazenamento</h3>
+            <p>O PraiaVendas armazena todos os dados localmente no seu dispositivo para garantir sua privacidade. Nenhuma informação sai do seu celular. Usamos cookies para melhorar sua experiência e manter você logado.</p>
+            <p style="margin-top: 1rem;"><strong>Seus dados ficam salvos por até 12 meses.</strong></p>
+            <div class="modal-actions">
+                <button id="acceptCookies" class="success">
+                    <i class="fas fa-check"></i> Aceitar e Continuar
+                </button>
+            </div>
         </div>
+    </div>
 
-      </div>
-    </section>
-
-    <!-- App main -->
-    <header class="app-header" style="display:none" id="app-header">
-      <div class="site-title">Mystical Stories</div>
-      <div class="header-actions">
-        <div class="status-indicator">
-          <div class="status-dot"></div>
-          <div style="font-size:14px;color:rgba(255,255,255,0.7)" id="status-label">Pronto</div>
-        </div>
-      </div>
-    </header>
-
-    <main id="main-app" style="display:none">
-      <div class="layout">
-        <aside class="side" id="sidebar">
-          <div class="search">
-            <input id="search-input" placeholder="Buscar nos capítulos..." aria-label="buscar capítulos" />
-            <button id="clear-search" class="small-btn">Limpar</button>
-          </div>
-
-          <div class="toolbar">
-            <button id="btn-refresh" class="small-btn">🔄 Atualizar</button>
-            <button id="btn-prefetch" class="small-btn" title="Pré-carregar próximo capítulo">⏭️ Pré-carregar</button>
-            <button id="btn-toggle-markdown" class="small-btn">📝 Markdown: ativo</button>
-          </div>
-
-          <div id="chapters-container">
-            <div class="placeholder" id="chapters-placeholder">Nenhum capítulo carregado — clique em "Atualizar" para procurar TXT*.json</div>
-            <ul id="chapter-list" style="list-style:none;padding-left:0;margin-top:0"></ul>
-          </div>
-
-          <div class="upcoming" style="margin-top:20px">
-            <strong style="color:var(--accent4)">Próximos</strong>
-            <ul id="upcoming-small" class="episodes-list"><li style="color:rgba(255,255,255,0.5)">Sem informações</li></ul>
-          </div>
-
-          <div class="footer-note">💡 Dica: coloque arquivos TXT1.json, TXT2.json ... e um config.json na mesma pasta do index.html</div>
-        </aside>
-
-        <section class="content" id="content-area">
-          <div id="chapter-content-area">
-            <div class="placeholder" id="content-placeholder">Selecione um capítulo para começar sua jornada mística...</div>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <div id="overlay" class="overlay" aria-hidden="true"></div>
-  </div>
-
-<script>
-/*
-  O MELHOR SITE DE HISTÓRIAS MÍSTICAS
-  - Efeitos visuais impressionantes com partículas e ondas
-  - Design glassmorphism aprimorado
-  - Transições suaves e animações fluidas
-  - Tema aquático imersivo
-  - UX refinada com feedback visual
-*/
-
-/* ---------- Configurações ---------- */
-const MAX_SCAN = 100;        // quantos arquivos TXT# tentar escanear
-const SCAN_BATCH = 6;        // quantas buscas simultâneas executar
-const AUTO_MARKDOWN = true;  // converter markdown simples por padrão
-
-/* ---------- Estado ---------- */
-let config = {};
-let stories = []; // {id, title, content, raw, loaded}
-let current = null;
-let useMarkdown = AUTO_MARKDOWN;
-
-/* ---------- Elementos ---------- */
-const landingScreen = document.getElementById('landing-screen');
-const enterButton = document.getElementById('enter-button');
-const appHeader = document.getElementById('app-header');
-const mainApp = document.getElementById('main-app');
-const chapterListEl = document.getElementById('chapter-list');
-const chaptersPlaceholder = document.getElementById('chapters-placeholder');
-const contentArea = document.getElementById('chapter-content-area');
-const contentPlaceholder = document.getElementById('content-placeholder');
-const episodeList = document.getElementById('episode-list');
-const upcomingSmall = document.getElementById('upcoming-small');
-const introText = document.getElementById('intro-text');
-const statusLabel = document.getElementById('status-label');
-const refreshButton = document.getElementById('btn-refresh');
-const refreshLanding = document.getElementById('refresh-chapters');
-const themeToggle = document.getElementById('theme-toggle');
-const openSample = document.getElementById('open-sample');
-const prefetchBtn = document.getElementById('btn-prefetch');
-const searchInput = document.getElementById('search-input');
-const clearSearch = document.getElementById('clear-search');
-const particlesContainer = document.getElementById('particles-container');
-const themeKey = 'mystical_theme';
-const lastChapterKey = 'mystical_last_chapter';
-const themeOrangeClass = 'theme-orange';
-
-/* ---------- Utilitários ---------- */
-function setStatus(text){
-  statusLabel.textContent = text;
-}
-
-// Criar partículas flutuantes
-function createParticles() {
-  const count = 30;
-  for (let i = 0; i < count; i++) {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
-    
-    // Tamanho e posição aleatórios
-    const size = Math.random() * 8 + 2;
-    const left = Math.random() * 100;
-    const delay = Math.random() * 20;
-    const duration = 15 + Math.random() * 15;
-    
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    particle.style.left = `${left}%`;
-    particle.style.top = `100%`;
-    particle.style.animationDelay = `${delay}s`;
-    particle.style.animationDuration = `${duration}s`;
-    
-    particlesContainer.appendChild(particle);
-  }
-}
-
-// Converter texto para HTML de forma segura
-function safeTextToHtml(text){
-  // Conversor markdown -> HTML leve e seguro
-  const esc = (s)=> s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  if(!useMarkdown) {
-    // Apenas escapar e preservar quebras de linha
-    const lines = esc(text).split(/\n{2,}/).map(p=> `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
-    return lines;
-  }
-  let t = esc(text);
-
-  // Cabeçalhos: linhas começando com # (1-3)
-  t = t.replace(/^### (.*)$/gm, '<h3>$1</h3>');
-  t = t.replace(/^## (.*)$/gm, '<h2>$1</h2>');
-  t = t.replace(/^# (.*)$/gm, '<h1>$1</h1>');
-  // Negrito **texto**
-  t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  // Itálico *texto*
-  t = t.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  // Links [texto](url)
-  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--accent4); text-decoration: underline;">$1</a>');
-  // Parágrafos
-  t = t.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
-  return t;
-}
-
-// Efeito de respingo de água
-function createWaterDropletEffect(element) {
-  const droplet = document.createElement('div');
-  droplet.classList.add('water-droplet');
-  element.appendChild(droplet);
-  
-  setTimeout(() => {
-    element.removeChild(droplet);
-  }, 1500);
-}
-
-/* ---------- Tema salvo ---------- */
-function applySavedTheme(){
-  const saved = localStorage.getItem(themeKey);
-  if(saved === 'orange') document.body.classList.add(themeOrangeClass);
-}
-applySavedTheme();
-
-/* ---------- Carregar config.json ---------- */
-async function loadConfig(){
-  try{
-    const res = await fetch('config.json',{cache:'no-store'});
-    if(!res.ok) throw new Error('config não encontrado');
-    config = await res.json();
-    introText.textContent = config.presentationText || introText.textContent;
-    // Preencher próximos episódios
-    if(Array.isArray(config.upcomingEpisodes) && config.upcomingEpisodes.length){
-      episodeList.innerHTML = '';
-      upcomingSmall.innerHTML = '';
-      config.upcomingEpisodes.forEach(ep=>{
-        const li = document.createElement('li');
-        li.style.display='flex'; 
-        li.style.justifyContent='space-between';
-        li.style.padding = '8px 0';
-        li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-        li.innerHTML = `<span style="color:var(--muted)">${ep.episode}</span><span style="color:rgba(255,255,255,0.5)">${ep.date}</span>`;
-        episodeList.appendChild(li);
-        upcomingSmall.appendChild(li.cloneNode(true));
-      });
-    } else {
-      episodeList.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Nenhum episódio anunciado</li>';
-      upcomingSmall.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Nenhum episódio anunciado</li>';
-    }
-  }catch(err){
-    // Fallback
-    config = {};
-    episodeList.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Configuração não encontrada (config.json)</li>';
-    upcomingSmall.innerHTML = '<li style="color:rgba(255,255,255,0.5)">Configuração não encontrada</li>';
-  }
-}
-
-/* ---------- Escanear arquivos TXT*.json ---------- */
-async function scanChapters(){
-  setStatus('Procurando capítulos...');
-  stories = [];
-  chapterListEl.innerHTML = '';
-  chaptersPlaceholder.style.display = 'block';
-  contentPlaceholder.textContent = 'Selecione um capítulo para começar sua jornada mística...';
-  const found = [];
-
-  // Tentar em lotes para evitar muitas buscas simultâneas
-  const tasks = [];
-  for(let i=1;i<=MAX_SCAN;i++){
-    tasks.push(i);
-  }
-
-  // Processar em pequenos lotes concorrentes
-  const concurrency = SCAN_BATCH;
-  for(let i=0;i<tasks.length;i+=concurrency){
-    const batch = tasks.slice(i,i+concurrency).map(async (num)=>{
-      try{
-        const res = await fetch(`TXT${num}.json`, {cache:'no-store'});
-        if(res.ok){
-          const json = await res.json();
-          found.push({id:num, title:json.title||`Capítulo ${num}`, content:json.content||'', raw:json});
+    <!-- Switch CSS -->
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 30px;
         }
-      }catch(e){
-        // Ignorar arquivos ausentes
-      }
-    });
-    await Promise.all(batch);
-  }
 
-  // Ordenar por ID
-  found.sort((a,b)=> a.id - b.id);
-  stories = found;
-  updateChapterListUI();
-  setStatus(`Encontrados ${stories.length} capítulos`);
-  return stories.length;
-}
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-/* ---------- Atualizar lista de capítulos na UI ---------- */
-function updateChapterListUI(){
-  chapterListEl.innerHTML = '';
-  if(!stories || stories.length===0){
-    chaptersPlaceholder.style.display = 'block';
-    chapterListEl.style.display = 'none';
-    return;
-  }
-  chaptersPlaceholder.style.display = 'none';
-  chapterListEl.style.display = 'block';
-  stories.forEach(s=>{
-    const li = document.createElement('li');
-    li.className = 'chapter-item';
-    li.dataset.id = s.id;
-    li.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <strong style="font-size:15px">${escapeHtml(s.title)}</strong>
-          <div style="font-size:12px;color:rgba(255,255,255,0.5)">TXT${s.id}.json</div>
-        </div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4)">${s.id}</div>
-      </div>
-    `;
-    li.addEventListener('click', ()=> {
-      showChapter(s.id);
-      createWaterDropletEffect(li);
-      // Lembrar último capítulo
-      localStorage.setItem(lastChapterKey, s.id);
-    });
-    chapterListEl.appendChild(li);
-  });
-}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
 
-/* ---------- Mostrar capítulo ---------- */
-function showChapter(id){
-  const s = stories.find(x=> x.id === Number(id));
-  if(!s) return;
-  // Marcar como ativo
-  document.querySelectorAll('.chapter-item').forEach(el => {
-    el.classList.toggle('active', Number(el.dataset.id) === Number(id));
-  });
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
 
-  // Renderizar conteúdo com segurança (markdown ou texto puro)
-  const html = safeTextToHtml(s.content || '');
-  // Definir innerHTML porque já foi convertido/escapado
-  contentArea.innerHTML = `
-    <article class="fade-in">
-      <h2 class="chapter-title">${escapeHtml(s.title)}</h2>
-      <div class="chapter-text">${html}</div>
-    </article>
-  `;
-  current = s.id;
-  setStatus(`Lendo: ${s.title}`);
-  // Pré-carregar próximo
-  prefetchNext(s.id);
-}
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
 
-/* ---------- Pré-carregar próximo capítulo ---------- */
-async function prefetchNext(id){
-  const nextId = Number(id)+1;
-  // Se já estiver carregado, pular
-  if(stories.some(x=> x.id === nextId)) return;
-  // Tentar buscar mas não adicionar à lista automaticamente
-  try{
-    const res = await fetch(`TXT${nextId}.json`, {cache:'no-store'});
-    if(res.ok){
-      const json = await res.json();
-      // Opcionalmente adicionar silenciosamente
-      stories.push({id: nextId, title: json.title || `Capítulo ${nextId}`, content: json.content || '', raw: json});
-      stories.sort((a,b)=> a.id - b.id);
-      updateChapterListUI();
-      setStatus(`Pré-carregado capítulo ${nextId}`);
-    }
-  }catch(e){}
-}
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+    </style>
 
-/* ---------- Busca simples em títulos e conteúdo ---------- */
-function doSearch(q){
-  q = (q||'').trim().toLowerCase();
-  if(!q){
-    // Mostrar todos
-    Array.from(chapterListEl.children).forEach(li => li.style.display = '');
-    return;
-  }
-  Array.from(chapterListEl.children).forEach(li=>{
-    const id = Number(li.dataset.id);
-    const s = stories.find(x=> x.id === id);
-    const match = (s.title || '').toLowerCase().includes(q) || (s.content || '').toLowerCase().includes(q);
-    li.style.display = match ? '' : 'none';
-  });
-}
+    <script>
+        // Configurações iniciais
+        const APP_NAME = "PraiaVendas";
+        const DATA_KEYS = {
+            USERS: 'praiaVendas_users',
+            BUSINESS_INFO: 'praiaVendas_businessInfo',
+            PRODUCTS: 'praiaVendas_products',
+            SALES: 'praiaVendas_sales',
+            SETTINGS: 'praiaVendas_settings',
+            COOKIE_CONSENT: 'praiaVendas_cookieConsent',
+            SESSION: 'praiaVendas_session'
+        };
 
-/* ---------- Utilitários ---------- */
-function escapeHtml(s){ 
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
-}
+        // Estado da aplicação
+        let appState = {
+            currentUser: null,
+            businessInfo: {
+                name: "PraiaVendas",
+                slogan: "Vendas na Praia",
+                logo: "",
+                themeColor: '#FF9800'
+            },
+            products: [],
+            sales: [],
+            settings: {
+                darkMode: false,
+                saleSounds: true,
+                stockNotifications: true,
+                animations: true,
+                currentFilter: 'today'
+            },
+            users: [
+                {
+                    username: "admin",
+                    password: "admin123",
+                    role: "admin"
+                }
+            ],
+            currentSection: 'dashboard'
+        };
 
-/* ---------- Configurar eventos ---------- */
-enterButton.addEventListener('click', async ()=>{
-  // Carregar configuração e capítulos e mostrar UI
-  await loadConfig();
-  await scanChapters();
-  // Esconder tela inicial, mostrar app
-  landingScreen.style.display = 'none';
-  appHeader.style.display = 'flex';
-  mainApp.style.display = 'block';
-  // Restaurar último capítulo se presente
-  const last = localStorage.getItem(lastChapterKey);
-  if(last && stories.some(s=> s.id === Number(last))){
-    showChapter(Number(last));
-    // Rolar selecionado para a vista
-    setTimeout(()=> {
-      const el = document.querySelector(`.chapter-item[data-id="${last}"]`);
-      if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
-    },100);
-  }
-});
+        // Elementos DOM
+        const dom = {
+            // Login
+            loginScreen: document.getElementById('loginScreen'),
+            mainApp: document.getElementById('mainApp'),
+            businessLogo: document.getElementById('businessLogo'),
+            businessNameLogin: document.getElementById('businessNameLogin'),
+            usernameInput: document.getElementById('usernameInput'),
+            passwordInput: document.getElementById('passwordInput'),
+            loginBtn: document.getElementById('loginBtn'),
+            loginError: document.getElementById('loginError'),
+            
+            // Header
+            businessAvatar: document.getElementById('businessAvatar'),
+            businessNameHeader: document.getElementById('businessNameHeader'),
+            businessSlogan: document.getElementById('businessSlogan'),
+            notificationToggle: document.getElementById('notificationToggle'),
+            themeToggle: document.getElementById('themeToggle'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            tabs: document.querySelectorAll('.tab'),
+            
+            // Seções
+            sections: document.querySelectorAll('.section'),
+            
+            // Dashboard
+            totalSalesValue: document.getElementById('totalSalesValue'),
+            totalProductsSold: document.getElementById('totalProductsSold'),
+            averageSale: document.getElementById('averageSale'),
+            lowStockCount: document.getElementById('lowStockCount'),
+            filterButtons: document.querySelectorAll('.filter-btn'),
+            salesChart: document.getElementById('salesChart'),
+            achievementsList: document.getElementById('achievementsList'),
+            
+            // Vendas
+            productSelect: document.getElementById('productSelect'),
+            quantityInput: document.getElementById('quantityInput'),
+            priceInput: document.getElementById('priceInput'),
+            totalPrice: document.getElementById('totalPrice'),
+            registerSaleBtn: document.getElementById('registerSaleBtn'),
+            recentSalesList: document.getElementById('recentSalesList'),
+            
+            // Produtos
+            productName: document.getElementById('productName'),
+            productCategory: document.getElementById('productCategory'),
+            productPrice: document.getElementById('productPrice'),
+            productStock: document.getElementById('productStock'),
+            addProductBtn: document.getElementById('addProductBtn'),
+            productsList: document.getElementById('productsList'),
+            
+            // Financeiro
+            totalRevenue: document.getElementById('totalRevenue'),
+            profitValue: document.getElementById('profitValue'),
+            bestProduct: document.getElementById('bestProduct'),
+            financeChart: document.getElementById('financeChart'),
+            exportSalesBtn: document.getElementById('exportSalesBtn'),
+            exportProductsBtn: document.getElementById('exportProductsBtn'),
+            exportFinanceBtn: document.getElementById('exportFinanceBtn'),
+            
+            // Configurações
+            businessNameInput: document.getElementById('businessNameInput'),
+            businessSloganInput: document.getElementById('businessSloganInput'),
+            businessPhotoPreview: document.getElementById('businessPhotoPreview'),
+            businessPhotoInput: document.getElementById('businessPhotoInput'),
+            photoUpload: document.getElementById('photoUpload'),
+            saveBusinessInfoBtn: document.getElementById('saveBusinessInfoBtn'),
+            colorOptions: document.querySelectorAll('.color-option'),
+            newUsername: document.getElementById('newUsername'),
+            newPassword: document.getElementById('newPassword'),
+            confirmPassword: document.getElementById('confirmPassword'),
+            changeCredentialsBtn: document.getElementById('changeCredentialsBtn'),
+            saleSoundsToggle: document.getElementById('saleSoundsToggle'),
+            stockNotificationsToggle: document.getElementById('stockNotificationsToggle'),
+            animationsToggle: document.getElementById('animationsToggle'),
+            backupDataBtn: document.getElementById('backupDataBtn'),
+            restoreDataBtn: document.getElementById('restoreDataBtn'),
+            resetDataBtn: document.getElementById('resetDataBtn'),
+            
+            // Notificações
+            notification: document.getElementById('notification'),
+            notificationText: document.getElementById('notificationText'),
+            
+            // Animação
+            saleAnimation: document.getElementById('saleAnimation'),
+            
+            // Modal
+            cookieModal: document.getElementById('cookieModal'),
+            acceptCookies: document.getElementById('acceptCookies')
+        };
 
-refreshButton.addEventListener('click', async ()=> { 
-  setStatus('Atualizando...'); 
-  await scanChapters(); 
-});
+        // Inicialização
+        function initApp() {
+            // Verificar consentimento de cookies
+            checkCookieConsent();
+            
+            // Carregar dados salvos
+            loadAppData();
+            
+            // Configurar eventos
+            setupEventListeners();
+            
+            // Atualizar interface
+            updateBusinessInfo();
+            loadProducts();
+            updateDashboard();
+            setupCharts();
+            
+            // Verificar se há sessão ativa
+            checkSession();
+        }
 
-refreshLanding.addEventListener('click', async ()=> { 
-  setStatus('Atualizando...'); 
-  await scanChapters(); 
-});
+        // Verificar sessão
+        function checkSession() {
+            const session = localStorage.getItem(DATA_KEYS.SESSION);
+            if (session) {
+                const sessionData = JSON.parse(session);
+                if (sessionData.expires > Date.now()) {
+                    // Sessão válida, fazer login automático
+                    appState.currentUser = sessionData.user;
+                    showMainApp();
+                } else {
+                    // Sessão expirada
+                    localStorage.removeItem(DATA_KEYS.SESSION);
+                    showLogin();
+                }
+            } else {
+                showLogin();
+            }
+        }
 
-document.getElementById('btn-prefetch').addEventListener('click', ()=> {
-  if(current) prefetchNext(current);
-  else setStatus('Nenhum capítulo selecionado para pré-carregar');
-});
+        // Gerenciamento de cookies
+        function checkCookieConsent() {
+            const consent = localStorage.getItem(DATA_KEYS.COOKIE_CONSENT);
+            if (!consent) {
+                setTimeout(() => {
+                    dom.cookieModal.classList.add('show');
+                }, 1000);
+            }
+        }
 
-themeToggle.addEventListener('click', ()=> {
-  const isOrange = document.body.classList.toggle(themeOrangeClass);
-  localStorage.setItem(themeKey, isOrange ? 'orange' : 'default');
-  setStatus(`Tema ${isOrange ? 'laranja' : 'azul'} ativado`);
-});
+        // Carregar dados
+        function loadAppData() {
+            // Carregar informações do negócio
+            const savedBusinessInfo = localStorage.getItem(DATA_KEYS.BUSINESS_INFO);
+            if (savedBusinessInfo) {
+                appState.businessInfo = JSON.parse(savedBusinessInfo);
+            }
+            
+            // Carregar produtos
+            const savedProducts = localStorage.getItem(DATA_KEYS.PRODUCTS);
+            if (savedProducts) {
+                appState.products = JSON.parse(savedProducts);
+            }
+            
+            // Carregar vendas
+            const savedSales = localStorage.getItem(DATA_KEYS.SALES);
+            if (savedSales) {
+                appState.sales = JSON.parse(savedSales);
+            }
+            
+            // Carregar configurações
+            const savedSettings = localStorage.getItem(DATA_KEYS.SETTINGS);
+            if (savedSettings) {
+                appState.settings = JSON.parse(savedSettings);
+            }
+            
+            // Carregar usuários
+            const savedUsers = localStorage.getItem(DATA_KEYS.USERS);
+            if (savedUsers) {
+                appState.users = JSON.parse(savedUsers);
+            }
+        }
 
-openSample.addEventListener('click', ()=> {
-  alert('Estrutura de exemplo para config.json:\n\n{\n  "presentationText": "Seu texto introdutório místico aqui",\n  "upcomingEpisodes": [\n    {"date": "2025-12-01", "episode": "Episódio 4"},\n    {"date": "2025-12-10", "episode": "Episódio 5"}\n  ]\n}');
-});
+        // Salvar dados
+        function saveAppData() {
+            localStorage.setItem(DATA_KEYS.BUSINESS_INFO, JSON.stringify(appState.businessInfo));
+            localStorage.setItem(DATA_KEYS.PRODUCTS, JSON.stringify(appState.products));
+            localStorage.setItem(DATA_KEYS.SALES, JSON.stringify(appState.sales));
+            localStorage.setItem(DATA_KEYS.SETTINGS, JSON.stringify(appState.settings));
+            localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
+        }
 
-searchInput.addEventListener('input', (e)=> doSearch(e.target.value));
-clearSearch.addEventListener('click', ()=> { 
-  searchInput.value=''; 
-  doSearch(''); 
-  setStatus('Busca limpa');
-});
+        // Atualizar informações do negócio na interface
+        function updateBusinessInfo() {
+            // Atualizar cores
+            document.documentElement.style.setProperty('--primary', appState.businessInfo.themeColor);
+            
+            // Atualizar logo/avatar
+            if (appState.businessInfo.logo) {
+                dom.businessLogo.src = appState.businessInfo.logo;
+                dom.businessAvatar.src = appState.businessInfo.logo;
+                dom.businessPhotoPreview.src = appState.businessInfo.logo;
+            } else {
+                // Usar ícone padrão
+                const defaultIcon = "https://cdn-icons-png.flaticon.com/512/2173/2173475.png";
+                dom.businessLogo.src = defaultIcon;
+                dom.businessAvatar.src = defaultIcon;
+                dom.businessPhotoPreview.src = defaultIcon;
+            }
+            
+            // Atualizar nomes
+            dom.businessNameLogin.textContent = appState.businessInfo.name;
+            dom.businessNameHeader.textContent = appState.businessInfo.name;
+            dom.businessSlogan.textContent = appState.businessInfo.slogan;
+            dom.businessNameInput.value = appState.businessInfo.name;
+            dom.businessSloganInput.value = appState.businessInfo.slogan;
+            
+            // Atualizar cores selecionadas
+            dom.colorOptions.forEach(option => {
+                option.classList.toggle('selected', option.dataset.color === appState.businessInfo.themeColor);
+            });
+            
+            // Atualizar tema
+            updateTheme();
+        }
 
-document.getElementById('btn-toggle-markdown').addEventListener('click', (e)=>{
-  useMarkdown = !useMarkdown;
-  e.target.textContent = '📝 Markdown: ' + (useMarkdown ? 'ativo' : 'inativo');
-  setStatus('Markdown ' + (useMarkdown ? 'ativado' : 'desativado'));
-  // Se um capítulo estiver aberto, renderizar novamente com a nova configuração
-  if(current) {
-    showChapter(current);
-  }
-});
+        // Tema escuro/claro
+        function toggleTheme() {
+            appState.settings.darkMode = !appState.settings.darkMode;
+            saveAppData();
+            updateTheme();
+            showNotification(appState.settings.darkMode ? "Modo escuro ativado" : "Modo claro ativado", "info");
+        }
 
-/* ---------- Acessibilidade por teclado ---------- */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'k' && (e.ctrlKey || e.metaKey)){
-    e.preventDefault();
-    searchInput.focus();
-  }
-});
+        function updateTheme() {
+            if (appState.settings.darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                dom.themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                dom.themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
 
-/* ---------- Inicializar elementos de UI ---------- */
-document.addEventListener('DOMContentLoaded', ()=>{
-  applySavedTheme();
-  setStatus('Pronto');
-  createParticles();
-});
+        // Login/Logout
+        function login(username, password) {
+            const user = appState.users.find(u => 
+                u.username === username && u.password === password
+            );
+            
+            if (user) {
+                appState.currentUser = user;
+                
+                // Criar sessão (expira em 7 dias)
+                const session = {
+                    user: user,
+                    expires: Date.now() + (7 * 24 * 60 * 60 * 1000)
+                };
+                localStorage.setItem(DATA_KEYS.SESSION, JSON.stringify(session));
+                
+                showMainApp();
+                showNotification(`Bem-vindo, ${user.username}!`, "success");
+                return true;
+            }
+            
+            return false;
+        }
 
-/* ---------- Expor uma atualização pública para gatilhos externos (opcional) ---------- */
-window.mystical = {
-  refresh: scanChapters,
-  loadConfig,
-};
+        function logout() {
+            appState.currentUser = null;
+            localStorage.removeItem(DATA_KEYS.SESSION);
+            showLogin();
+            showNotification("Você saiu do sistema", "info");
+        }
 
-/* ---------- Carregamento inicial rápido se o usuário quiser pré-carregar a configuração ---------- */
-loadConfig();
-</script>
+        function showLogin() {
+            dom.loginScreen.style.display = 'flex';
+            dom.mainApp.style.display = 'none';
+            dom.usernameInput.value = '';
+            dom.passwordInput.value = '';
+            dom.loginError.style.display = 'none';
+        }
+
+        function showMainApp() {
+            dom.loginScreen.style.display = 'none';
+            dom.mainApp.style.display = 'block';
+        }
+
+        // Produtos
+        function loadProducts() {
+            // Limpar select
+            dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
+            
+            // Adicionar produtos
+            appState.products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} - R$ ${product.price.toFixed(2)}`;
+                option.dataset.price = product.price;
+                dom.productSelect.appendChild(option);
+            });
+            
+            // Atualizar grid de produtos
+            updateProductsGrid();
+        }
+
+        function addProduct(name, category, price, stock) {
+            const newProduct = {
+                id: Date.now(),
+                name: name,
+                category: category,
+                price: parseFloat(price),
+                stock: parseInt(stock),
+                minStock: 5,
+                createdAt: new Date().toISOString()
+            };
+            
+            appState.products.push(newProduct);
+            saveAppData();
+            loadProducts();
+            showNotification(`Produto "${name}" adicionado com sucesso!`, "success");
+        }
+
+        function updateProductStock(productId, quantity) {
+            const product = appState.products.find(p => p.id === productId);
+            if (product) {
+                product.stock -= quantity;
+                
+                // Verificar estoque baixo
+                if (product.stock <= product.minStock && appState.settings.stockNotifications) {
+                    showNotification(`Estoque baixo: ${product.name}`, "warning");
+                }
+                
+                saveAppData();
+                loadProducts();
+            }
+        }
+
+        function updateProductsGrid() {
+            dom.productsList.innerHTML = '';
+            
+            if (appState.products.length === 0) {
+                dom.productsList.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3>Nenhum produto cadastrado</h3>
+                        <p>Adicione seus produtos para começar a vender</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            appState.products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">
+                        <i class="fas fa-${getProductIcon(product.category)}"></i>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">R$ ${product.price.toFixed(2)}</div>
+                        <div class="product-stock ${product.stock <= product.minStock ? 'stock-low' : ''}">
+                            Estoque: ${product.stock} ${product.stock <= product.minStock ? '⚠️ Baixo' : ''}
+                        </div>
+                        <button class="small" onclick="editProduct(${product.id})" style="margin-top: 0.5rem;">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                `;
+                dom.productsList.appendChild(card);
+            });
+        }
+
+        function getProductIcon(category) {
+            const icons = {
+                'bebidas': 'wine-bottle',
+                'comidas': 'hamburger',
+                'sobremesas': 'ice-cream',
+                'acessorios': 'umbrella-beach',
+                'outros': 'box'
+            };
+            return icons[category] || 'box';
+        }
+
+        // Vendas
+        function registerSale(productId, quantity) {
+            const product = appState.products.find(p => p.id === productId);
+            if (!product) return false;
+            
+            if (product.stock < quantity) {
+                showNotification(`Estoque insuficiente de ${product.name}`, "danger");
+                return false;
+            }
+            
+            const sale = {
+                id: Date.now(),
+                productId: productId,
+                productName: product.name,
+                quantity: parseInt(quantity),
+                price: product.price,
+                total: product.price * parseInt(quantity),
+                date: new Date().toISOString()
+            };
+            
+            appState.sales.push(sale);
+            
+            // Atualizar estoque
+            updateProductStock(productId, quantity);
+            
+            saveAppData();
+            
+            // Efeitos visuais e sonoros
+            if (appState.settings.animations) {
+                playSaleAnimation();
+            }
+            
+            if (appState.settings.saleSounds) {
+                playSaleSound();
+            }
+            
+            // Atualizar dashboard
+            updateDashboard();
+            
+            return true;
+        }
+
+        function calculateSale() {
+            const productId = parseInt(dom.productSelect.value);
+            const quantity = parseInt(dom.quantityInput.value) || 1;
+            
+            if (!productId) return;
+            
+            const product = appState.products.find(p => p.id === productId);
+            if (product) {
+                dom.priceInput.value = product.price.toFixed(2);
+                dom.totalPrice.value = (product.price * quantity).toFixed(2);
+            }
+        }
+
+        // Dashboard
+        function updateDashboard() {
+            const filter = appState.settings.currentFilter;
+            let filteredSales = appState.sales;
+            
+            // Aplicar filtro
+            if (filter !== 'all') {
+                const now = new Date();
+                filteredSales = appState.sales.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    
+                    switch(filter) {
+                        case 'today':
+                            return saleDate.toDateString() === now.toDateString();
+                        case 'week':
+                            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                            return saleDate >= weekAgo;
+                        case 'month':
+                            return saleDate.getMonth() === now.getMonth() && 
+                                   saleDate.getFullYear() === now.getFullYear();
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Calcular totais
+            const totalSales = filteredSales.reduce((sum, sale) => sum + sale.total, 0);
+            const totalProducts = filteredSales.reduce((sum, sale) => sum + sale.quantity, 0);
+            const average = filteredSales.length > 0 ? totalSales / filteredSales.length : 0;
+            
+            // Produtos com estoque baixo
+            const lowStockProducts = appState.products.filter(p => p.stock <= p.minStock);
+            
+            // Atualizar valores com animação
+            animateValue(dom.totalSalesValue, `R$ ${totalSales.toFixed(2)}`);
+            animateValue(dom.totalProductsSold, totalProducts.toString());
+            animateValue(dom.averageSale, `R$ ${average.toFixed(2)}`);
+            dom.lowStockCount.textContent = lowStockProducts.length;
+            
+            // Atualizar conquistas
+            updateAchievements();
+            
+            // Atualizar gráfico
+            updateSalesChart(filteredSales);
+        }
+
+        function animateValue(element, newValue) {
+            element.classList.add('counting-up');
+            element.textContent = newValue;
+            setTimeout(() => {
+                element.classList.remove('counting-up');
+            }, 1000);
+        }
+
+        function updateAchievements() {
+            const achievements = [
+                { id: 1, name: "Primeira Venda", condition: () => appState.sales.length >= 1, icon: "🥇" },
+                { id: 2, name: "Vendedor Iniciante", condition: () => appState.sales.length >= 10, icon: "📈" },
+                { id: 3, name: "Vendedor Profissional", condition: () => appState.sales.length >= 50, icon: "🏆" },
+                { id: 4, name: "Estoque Cheio", condition: () => appState.products.every(p => p.stock > p.minStock * 2), icon: "📦" },
+                { id: 5, name: "Dia de Ouro", condition: () => {
+                    const today = new Date().toDateString();
+                    const todaySales = appState.sales.filter(s => new Date(s.date).toDateString() === today);
+                    return todaySales.reduce((sum, s) => sum + s.total, 0) >= 100;
+                }, icon: "💰" }
+            ];
+            
+            let html = '<div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">';
+            achievements.forEach(ach => {
+                const achieved = ach.condition();
+                html += `
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 10px; 
+                         background: ${achieved ? 'rgba(76, 175, 80, 0.1)' : 'rgba(158, 158, 158, 0.1)'}; 
+                         border-radius: 10px;">
+                        <span style="font-size: 1.5rem;">${ach.icon}</span>
+                        <div>
+                            <div style="font-weight: ${achieved ? '600' : '400'}">${ach.name}</div>
+                            <div style="font-size: 0.8rem; color: var(--gray);">
+                                ${achieved ? 'Conquistado!' : 'Em progresso...'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            dom.achievementsList.innerHTML = html;
+        }
+
+        // Gráficos
+        function setupCharts() {
+            // Gráfico de vendas
+            window.salesChart = new Chart(dom.salesChart, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: [],
+                        borderColor: appState.businessInfo.themeColor,
+                        backgroundColor: `${appState.businessInfo.themeColor}20`,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico financeiro
+            window.financeChart = new Chart(dom.financeChart, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bebidas', 'Comidas', 'Sobremesas', 'Acessórios', 'Outros'],
+                    datasets: [{
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: [
+                            '#FF9800',
+                            '#2196F3',
+                            '#4CAF50',
+                            '#9C27B0',
+                            '#FF5722'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            updateFinanceChart();
+        }
+
+        function updateSalesChart(filteredSales) {
+            // Agrupar vendas por dia
+            const salesByDay = {};
+            filteredSales.forEach(sale => {
+                const date = new Date(sale.date).toLocaleDateString('pt-BR', { weekday: 'short' });
+                if (!salesByDay[date]) salesByDay[date] = 0;
+                salesByDay[date] += sale.total;
+            });
+            
+            window.salesChart.data.labels = Object.keys(salesByDay);
+            window.salesChart.data.datasets[0].data = Object.values(salesByDay);
+            window.salesChart.update();
+        }
+
+        function updateFinanceChart() {
+            // Calcular vendas por categoria
+            const salesByCategory = {
+                'bebidas': 0,
+                'comidas': 0,
+                'sobremesas': 0,
+                'acessorios': 0,
+                'outros': 0
+            };
+            
+            appState.sales.forEach(sale => {
+                const product = appState.products.find(p => p.id === sale.productId);
+                if (product && salesByCategory.hasOwnProperty(product.category)) {
+                    salesByCategory[product.category] += sale.total;
+                }
+            });
+            
+            window.financeChart.data.datasets[0].data = [
+                salesByCategory.bebidas,
+                salesByCategory.comidas,
+                salesByCategory.sobremesas,
+                salesByCategory.acessorios,
+                salesByCategory.outros
+            ];
+            window.financeChart.update();
+            
+            // Atualizar resumo financeiro
+            const totalRevenue = appState.sales.reduce((sum, sale) => sum + sale.total, 0);
+            const estimatedProfit = totalRevenue * 0.3; // Supondo 30% de lucro
+            
+            // Produto mais vendido
+            const productSales = {};
+            appState.sales.forEach(sale => {
+                if (!productSales[sale.productName]) productSales[sale.productName] = 0;
+                productSales[sale.productName] += sale.quantity;
+            });
+            
+            let bestProduct = '-';
+            let maxSales = 0;
+            Object.entries(productSales).forEach(([name, sales]) => {
+                if (sales > maxSales) {
+                    maxSales = sales;
+                    bestProduct = name;
+                }
+            });
+            
+            dom.totalRevenue.textContent = `R$ ${totalRevenue.toFixed(2)}`;
+            dom.profitValue.textContent = `R$ ${estimatedProfit.toFixed(2)}`;
+            dom.bestProduct.textContent = bestProduct.length > 15 ? bestProduct.substring(0, 12) + '...' : bestProduct;
+        }
+
+        // Efeitos e sons
+        function playSaleAnimation() {
+            dom.saleAnimation.classList.add('show');
+            setTimeout(() => {
+                dom.saleAnimation.classList.remove('show');
+            }, 1000);
+            
+            // Criar confetes
+            for (let i = 0; i < 20; i++) {
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = appState.businessInfo.themeColor;
+            document.body.appendChild(confetti);
+            
+            // Animação
+            const animation = confetti.animate([
+                { top: '0px', opacity: 1, transform: 'rotate(0deg)' },
+                { top: '100vh', opacity: 0, transform: 'rotate(360deg)' }
+            ], {
+                duration: 1000 + Math.random() * 2000,
+                easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+            });
+            
+            animation.onfinish = () => confetti.remove();
+        }
+
+        function playSaleSound() {
+            // Criar som simples usando Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log("Som não disponível");
+            }
+        }
+
+        // Notificações
+        function showNotification(message, type = "success") {
+            dom.notificationText.textContent = message;
+            dom.notification.className = `notification ${type}`;
+            dom.notification.classList.add('show');
+            
+            setTimeout(() => {
+                dom.notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Exportação de dados
+        function exportData(type) {
+            let data, filename, contentType;
+            
+            switch(type) {
+                case 'sales':
+                    data = appState.sales.map(sale => ({
+                        Data: new Date(sale.date).toLocaleDateString('pt-BR'),
+                        Produto: sale.productName,
+                        Quantidade: sale.quantity,
+                        'Preço Unitário': sale.price.toFixed(2),
+                        Total: sale.total.toFixed(2)
+                    }));
+                    filename = 'vendas.csv';
+                    contentType = 'text/csv';
+                    exportToCSV(data, filename);
+                    break;
+                    
+                case 'products':
+                    data = appState.products.map(product => ({
+                        Nome: product.name,
+                        Categoria: product.category,
+                        Preço: product.price.toFixed(2),
+                        Estoque: product.stock,
+                        'Estoque Mínimo': product.minStock
+                    }));
+                    filename = 'produtos.csv';
+                    contentType = 'text/csv';
+                    exportToCSV(data, filename);
+                    break;
+                    
+                case 'finance':
+                    // Simular geração de PDF
+                    const totalSales = appState.sales.reduce((sum, sale) => sum + sale.total, 0);
+                    const totalProducts = appState.sales.reduce((sum, sale) => sum + sale.quantity, 0);
+                    const average = totalSales / (appState.sales.length || 1);
+                    
+                    const report = `
+                        RELATÓRIO FINANCEIRO - ${appState.businessInfo.name}
+                        ============================================
+                        Período: ${new Date().toLocaleDateString('pt-BR')}
+                        
+                        RESUMO:
+                        - Receita Total: R$ ${totalSales.toFixed(2)}
+                        - Produtos Vendidos: ${totalProducts}
+                        - Ticket Médio: R$ ${average.toFixed(2)}
+                        - Total de Vendas: ${appState.sales.length}
+                        
+                        PRODUTOS MAIS VENDIDOS:
+                        ${getTopProducts(5).map(p => `- ${p.name}: ${p.quantity} unidades`).join('\n')}
+                        
+                        ESTOQUE ATUAL:
+                        ${appState.products.map(p => `- ${p.name}: ${p.stock} unidades`).join('\n')}
+                    `;
+                    
+                    downloadFile(report, 'relatorio-financeiro.txt', 'text/plain');
+                    break;
+            }
+            
+            showNotification(`Dados exportados com sucesso!`, "success");
+        }
+
+        function exportToCSV(data, filename) {
+            const headers = Object.keys(data[0] || {});
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => row[header]).join(','))
+            ].join('\n');
+            
+            downloadFile(csvContent, filename, 'text/csv');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function getTopProducts(limit) {
+            const productSales = {};
+            appState.sales.forEach(sale => {
+                if (!productSales[sale.productName]) {
+                    productSales[sale.productName] = { name: sale.productName, quantity: 0 };
+                }
+                productSales[sale.productName].quantity += sale.quantity;
+            });
+            
+            return Object.values(productSales)
+                .sort((a, b) => b.quantity - a.quantity)
+                .slice(0, limit);
+        }
+
+        // Configurar eventos
+        function setupEventListeners() {
+            // Login
+            dom.loginBtn.addEventListener('click', () => {
+                const username = dom.usernameInput.value.trim();
+                const password = dom.passwordInput.value;
+                
+                if (!username || !password) {
+                    showNotification("Preencha todos os campos", "danger");
+                    return;
+                }
+                
+                if (login(username, password)) {
+                    // Sucesso
+                } else {
+                    dom.loginError.style.display = 'block';
+                }
+            });
+            
+            // Permitir login com Enter
+            dom.passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    dom.loginBtn.click();
+                }
+            });
+            
+            // Logout
+            dom.logoutBtn.addEventListener('click', logout);
+            
+            // Navegação
+            dom.tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const sectionId = tab.dataset.tab;
+                    setActiveSection(sectionId);
+                });
+            });
+            
+            // Tema
+            dom.themeToggle.addEventListener('click', toggleTheme);
+            
+            // Filtros do dashboard
+            dom.filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    dom.filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    appState.settings.currentFilter = btn.dataset.filter;
+                    saveAppData();
+                    updateDashboard();
+                });
+            });
+            
+            // Vendas
+            dom.productSelect.addEventListener('change', calculateSale);
+            dom.quantityInput.addEventListener('input', calculateSale);
+            dom.registerSaleBtn.addEventListener('click', () => {
+                const productId = parseInt(dom.productSelect.value);
+                const quantity = parseInt(dom.quantityInput.value) || 1;
+                
+                if (!productId) {
+                    showNotification("Selecione um produto", "danger");
+                    return;
+                }
+                
+                if (quantity <= 0) {
+                    showNotification("Quantidade inválida", "danger");
+                    return;
+                }
+                
+                if (registerSale(productId, quantity)) {
+                    showNotification(`Venda registrada: R$ ${(quantity * parseFloat(dom.priceInput.value)).toFixed(2)}`, "success");
+                    
+                    // Resetar formulário
+                    dom.productSelect.value = '';
+                    dom.quantityInput.value = '1';
+                    dom.priceInput.value = '';
+                    dom.totalPrice.value = '';
+                }
+            });
+            
+            // Produtos
+            dom.addProductBtn.addEventListener('click', () => {
+                const name = dom.productName.value.trim();
+                const category = dom.productCategory.value;
+                const price = dom.productPrice.value;
+                const stock = dom.productStock.value;
+                
+                if (!name || !price || !stock) {
+                    showNotification("Preencha todos os campos", "danger");
+                    return;
+                }
+                
+                addProduct(name, category, price, stock);
+                
+                // Resetar formulário
+                dom.productName.value = '';
+                dom.productPrice.value = '';
+                dom.productStock.value = '10';
+            });
+            
+            // Configurações do negócio
+            dom.saveBusinessInfoBtn.addEventListener('click', () => {
+                const name = dom.businessNameInput.value.trim();
+                const slogan = dom.businessSloganInput.value.trim();
+                
+                if (!name) {
+                    showNotification("Digite o nome do negócio", "danger");
+                    return;
+                }
+                
+                appState.businessInfo.name = name;
+                appState.businessInfo.slogan = slogan;
+                saveAppData();
+                updateBusinessInfo();
+                showNotification("Informações salvas com sucesso!", "success");
+            });
+            
+            // Upload de foto
+            dom.photoUpload.addEventListener('click', () => {
+                dom.businessPhotoInput.click();
+            });
+            
+            dom.businessPhotoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    showNotification("Selecione uma imagem", "danger");
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    appState.businessInfo.logo = event.target.result;
+                    saveAppData();
+                    updateBusinessInfo();
+                    showNotification("Foto atualizada com sucesso!", "success");
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Cores
+            dom.colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    appState.businessInfo.themeColor = option.dataset.color;
+                    saveAppData();
+                    updateBusinessInfo();
+                    showNotification("Cor do tema alterada!", "success");
+                });
+            });
+            
+            // Credenciais
+            dom.changeCredentialsBtn.addEventListener('click', () => {
+                const newUsername = dom.newUsername.value.trim();
+                const newPassword = dom.newPassword.value;
+                const confirmPassword = dom.confirmPassword.value;
+                
+                if (!newUsername || !newPassword) {
+                    showNotification("Preencha todos os campos", "danger");
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    showNotification("As senhas não coincidem", "danger");
+                    return;
+                }
+                
+                // Encontrar usuário atual
+                const userIndex = appState.users.findIndex(u => u.username === appState.currentUser.username);
+                if (userIndex !== -1) {
+                    appState.users[userIndex].username = newUsername;
+                    appState.users[userIndex].password = newPassword;
+                    appState.currentUser = appState.users[userIndex];
+                    saveAppData();
+                    
+                    // Atualizar sessão
+                    const session = {
+                        user: appState.currentUser,
+                        expires: Date.now() + (7 * 24 * 60 * 60 * 1000)
+                    };
+                    localStorage.setItem(DATA_KEYS.SESSION, JSON.stringify(session));
+                    
+                    showNotification("Credenciais atualizadas com sucesso!", "success");
+                    dom.newUsername.value = '';
+                    dom.newPassword.value = '';
+                    dom.confirmPassword.value = '';
+                }
+            });
+            
+            // Configurações de notificação/som
+            dom.saleSoundsToggle.addEventListener('change', (e) => {
+                appState.settings.saleSounds = e.target.checked;
+                saveAppData();
+            });
+            
+            dom.stockNotificationsToggle.addEventListener('change', (e) => {
+                appState.settings.stockNotifications = e.target.checked;
+                saveAppData();
+            });
+            
+            dom.animationsToggle.addEventListener('change', (e) => {
+                appState.settings.animations = e.target.checked;
+                saveAppData();
+            });
+            
+            // Gerenciamento de dados
+            dom.backupDataBtn.addEventListener('click', () => {
+                const backup = {
+                    businessInfo: appState.businessInfo,
+                    products: appState.products,
+                    sales: appState.sales,
+                    settings: appState.settings,
+                    users: appState.users,
+                    backupDate: new Date().toISOString()
+                };
+                
+                const backupStr = JSON.stringify(backup, null, 2);
+                downloadFile(backupStr, `praiaVendas-backup-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+                showNotification("Backup criado com sucesso!", "success");
+            });
+            
+            dom.restoreDataBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const backup = JSON.parse(event.target.result);
+                            
+                            if (confirm("Tem certeza que deseja restaurar este backup? Todos os dados atuais serão substituídos.")) {
+                                appState.businessInfo = backup.businessInfo || appState.businessInfo;
+                                appState.products = backup.products || [];
+                                appState.sales = backup.sales || [];
+                                appState.settings = backup.settings || appState.settings;
+                                appState.users = backup.users || appState.users;
+                                
+                                saveAppData();
+                                updateBusinessInfo();
+                                loadProducts();
+                                updateDashboard();
+                                updateFinanceChart();
+                                
+                                showNotification("Backup restaurado com sucesso!", "success");
+                            }
+                        } catch (err) {
+                            showNotification("Erro ao ler arquivo de backup", "danger");
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            });
+            
+            dom.resetDataBtn.addEventListener('click', () => {
+                if (confirm("Tem certeza que deseja limpar TODOS os dados? Esta ação não pode ser desfeita.")) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            });
+            
+            // Exportação
+            dom.exportSalesBtn.addEventListener('click', () => exportData('sales'));
+            dom.exportProductsBtn.addEventListener('click', () => exportData('products'));
+            dom.exportFinanceBtn.addEventListener('click', () => exportData('finance'));
+            
+            // Cookies
+            dom.acceptCookies.addEventListener('click', () => {
+                localStorage.setItem(DATA_KEYS.COOKIE_CONSENT, 'true');
+                dom.cookieModal.classList.remove('show');
+            });
+        }
+
+        // Navegação entre seções
+        function setActiveSection(sectionId) {
+            // Atualizar tabs
+            dom.tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === sectionId);
+            });
+            
+            // Atualizar seções
+            dom.sections.forEach(section => {
+                section.classList.toggle('active', section.id === sectionId);
+            });
+            
+            appState.currentSection = sectionId;
+            
+            // Atualizar dados específicos da seção
+            if (sectionId === 'dashboard') {
+                updateDashboard();
+            } else if (sectionId === 'finance') {
+                updateFinanceChart();
+            }
+        }
+
+        // Inicializar aplicativo
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Funções globais para uso em eventos inline
+        window.editProduct = function(productId) {
+            const product = appState.products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const newStock = prompt(`Atualizar estoque de ${product.name}:`, product.stock);
+            if (newStock !== null && !isNaN(newStock) && parseInt(newStock) >= 0) {
+                product.stock = parseInt(newStock);
+                saveAppData();
+                loadProducts();
+                showNotification(`Estoque de ${product.name} atualizado!`, "success");
+            }
+        };
+    </script>
 </body>
 </html>
