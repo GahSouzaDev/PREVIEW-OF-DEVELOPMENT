@@ -445,6 +445,129 @@
             background: var(--success);
         }
 
+        /* PAGAMENTO MISTO - NOVOS ESTILOS */
+        .mixed-payment-section {
+            margin-top: 1.5rem;
+            border-top: 2px dashed #E0E0E0;
+            padding-top: 1.5rem;
+        }
+
+        .mixed-payment-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .mixed-payment-title h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .mixed-payment-item {
+            background: #F8F9FA;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #E0E0E0;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .mixed-payment-item {
+            background: #2A2A2A;
+            border-color: #444;
+        }
+
+        .mixed-payment-item:hover {
+            border-color: var(--primary);
+        }
+
+        .mixed-payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .mixed-payment-method {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .mixed-payment-amount {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .mixed-payment-amount input {
+            width: 120px;
+            padding: 8px;
+            font-size: 0.95rem;
+        }
+
+        .mixed-payment-total {
+            background: var(--success);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .mixed-payment-total span {
+            font-size: 1.2rem;
+        }
+
+        .remove-payment-btn {
+            background: var(--danger);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .remove-payment-btn:hover {
+            background: #D32F2F;
+        }
+
+        .add-payment-btn {
+            background: var(--secondary);
+            width: 100%;
+            padding: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .remaining-amount {
+            margin-top: 0.5rem;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .remaining-positive {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .remaining-negative {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .remaining-zero {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        /* Animações */
         .sale-animation {
             position: fixed;
             top: 50%;
@@ -773,6 +896,15 @@
                 height: 36px;
                 font-size: 1rem;
             }
+            
+            .mixed-payment-amount {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .mixed-payment-amount input {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -803,17 +935,6 @@
         @keyframes countUp {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Efeito de partículas para vendas */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: var(--primary);
-            top: 0;
-            opacity: 0;
-            z-index: 999;
         }
 
         /* Switch */
@@ -1092,7 +1213,7 @@
                 </div>
             </section>
             
-            <!-- Vendas -->
+            <!-- Vendas COM PAGAMENTO MISTO -->
             <section id="sales" class="section">
                 <div class="sale-card">
                     <h2><i class="fas fa-cash-register"></i> Nova Venda</h2>
@@ -1115,15 +1236,31 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="paymentMethodSale">Forma de Pagamento</label>
-                            <select id="paymentMethodSale">
-                                <option value="">Selecione a forma</option>
-                            </select>
+                            <label for="saleTotal">Total da Venda (R$)</label>
+                            <input type="number" id="saleTotal" readonly style="font-weight: bold; color: var(--success);">
+                        </div>
+                    </div>
+                    
+                    <!-- SEÇÃO DE PAGAMENTO MISTO -->
+                    <div class="mixed-payment-section">
+                        <div class="mixed-payment-title">
+                            <h3><i class="fas fa-money-check-alt"></i> Pagamento Misto</h3>
+                            <button id="addPaymentMethodBtn" class="add-payment-btn">
+                                <i class="fas fa-plus"></i> Adicionar Forma
+                            </button>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="totalPrice">Total (R$)</label>
-                            <input type="number" id="totalPrice" readonly style="font-weight: bold; color: var(--success);">
+                        <div id="mixedPaymentContainer">
+                            <!-- Os métodos de pagamento serão adicionados aqui dinamicamente -->
+                        </div>
+                        
+                        <div id="paymentSummary">
+                            <div class="mixed-payment-total">
+                                Total Pago: R$ <span id="totalPaid">0.00</span>
+                            </div>
+                            <div id="remainingAmount" class="remaining-amount remaining-zero">
+                                Restante: R$ <span id="remainingValue">0.00</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -1142,7 +1279,7 @@
                 </div>
             </section>
             
-            <!-- Formas de Pagamento -->
+            <!-- Formas de Pagamento (gerenciamento) -->
             <section id="payment-methods" class="section">
                 <div class="sale-card">
                     <h2><i class="fas fa-credit-card"></i> Formas de Pagamento</h2>
@@ -1170,7 +1307,7 @@
                     </div>
                     
                     <div style="margin-top: 1.5rem;">
-                        <button id="addPaymentMethodBtn">
+                        <button id="savePaymentMethodBtn">
                             <i class="fas fa-plus"></i> Adicionar Forma de Pagamento
                         </button>
                     </div>
@@ -1453,8 +1590,6 @@
                     </div>
                 </div>
                 
-                <!-- REMOVIDA A SEÇÃO DE SEGURANÇA PARA EDIÇÃO DE CREDENCIAIS -->
-                
                 <div class="settings-section">
                     <h3 class="settings-title"><i class="fas fa-bell"></i> Notificações e Sons</h3>
                     <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -1551,7 +1686,7 @@
                 slogan: "Vendas na Praia",
                 logo: "",
                 themeColor: '#FF9800',
-                changeFund: 0.00 // Fundo de troco agora inicia em ZERO
+                changeFund: 0.00
             },
             products: [],
             sales: [],
@@ -1576,9 +1711,13 @@
                 currentFilter: 'today',
                 machineFeePercentage: 3.99
             },
-            users: [], // Será carregado do arquivo JSON
+            users: [], // Será carregado do arquivo JSON externo
             currentSection: 'dashboard'
         };
+
+        // Variáveis para controle do pagamento misto
+        let mixedPaymentMethods = [];
+        let nextPaymentId = 1;
 
         // Elementos DOM
         const dom = {
@@ -1617,20 +1756,26 @@
             filterButtons: document.querySelectorAll('.filter-btn'),
             salesChart: document.getElementById('salesChart'),
             
-            // Vendas
+            // Vendas (com pagamento misto)
             productSelect: document.getElementById('productSelect'),
             quantityInput: document.getElementById('quantityInput'),
             priceInput: document.getElementById('priceInput'),
-            paymentMethodSale: document.getElementById('paymentMethodSale'),
-            totalPrice: document.getElementById('totalPrice'),
+            saleTotal: document.getElementById('saleTotal'),
             registerSaleBtn: document.getElementById('registerSaleBtn'),
             recentSalesList: document.getElementById('recentSalesList'),
             
-            // Formas de Pagamento
+            // Pagamento Misto
+            addPaymentMethodBtn: document.getElementById('addPaymentMethodBtn'),
+            mixedPaymentContainer: document.getElementById('mixedPaymentContainer'),
+            totalPaid: document.getElementById('totalPaid'),
+            remainingValue: document.getElementById('remainingValue'),
+            remainingAmount: document.getElementById('remainingAmount'),
+            
+            // Formas de Pagamento (gerenciamento)
             paymentMethodName: document.getElementById('paymentMethodName'),
             paymentMethodType: document.getElementById('paymentMethodType'),
             paymentMethodFee: document.getElementById('paymentMethodFee'),
-            addPaymentMethodBtn: document.getElementById('addPaymentMethodBtn'),
+            savePaymentMethodBtn: document.getElementById('savePaymentMethodBtn'),
             paymentMethodsList: document.getElementById('paymentMethodsList'),
             paymentMethodsTable: document.getElementById('paymentMethodsTable'),
             
@@ -1698,79 +1843,158 @@
             acceptCookies: document.getElementById('acceptCookies')
         };
 
+        // ============ FUNÇÕES PARA PAGAMENTO MISTO ============
+
+        // Adicionar um método de pagamento à lista de pagamento misto
+        function addMixedPaymentMethod() {
+            if (appState.paymentMethods.length === 0) {
+                showNotification("Adicione formas de pagamento primeiro na seção 'Pagamentos'", "warning");
+                return;
+            }
+
+            const paymentId = nextPaymentId++;
+            const method = appState.paymentMethods[0]; // Pega o primeiro método por padrão
+            
+            mixedPaymentMethods.push({
+                id: paymentId,
+                methodId: method.id,
+                methodName: method.name,
+                methodType: method.type,
+                methodFee: method.fee,
+                amount: 0
+            });
+
+            updateMixedPaymentDisplay();
+        }
+
+        // Remover um método de pagamento da lista
+        function removeMixedPaymentMethod(id) {
+            mixedPaymentMethods = mixedPaymentMethods.filter(item => item.id !== id);
+            updateMixedPaymentDisplay();
+        }
+
+        // Atualizar o valor de um método de pagamento
+        function updateMixedPaymentAmount(id, amount) {
+            const item = mixedPaymentMethods.find(item => item.id === id);
+            if (item) {
+                item.amount = parseFloat(amount) || 0;
+                updatePaymentSummary();
+            }
+        }
+
+        // Atualizar a exibição dos métodos de pagamento misto
+        function updateMixedPaymentDisplay() {
+            const container = dom.mixedPaymentContainer;
+            container.innerHTML = '';
+
+            if (mixedPaymentMethods.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <p>Adicione formas de pagamento para dividir o valor total</p>
+                    </div>
+                `;
+                return;
+            }
+
+            mixedPaymentMethods.forEach(item => {
+                const methodDiv = document.createElement('div');
+                methodDiv.className = 'mixed-payment-item';
+                methodDiv.innerHTML = `
+                    <div class="mixed-payment-header">
+                        <div class="mixed-payment-method">
+                            ${item.methodName} ${item.methodFee > 0 ? `(${item.methodFee}%)` : ''}
+                        </div>
+                        <button onclick="removeMixedPaymentMethod(${item.id})" class="remove-payment-btn">
+                            <i class="fas fa-times"></i> Remover
+                        </button>
+                    </div>
+                    <div class="mixed-payment-amount">
+                        <input type="number" 
+                               min="0" 
+                               step="0.01" 
+                               value="${item.amount.toFixed(2)}" 
+                               placeholder="0.00"
+                               onchange="updateMixedPaymentAmount(${item.id}, this.value)"
+                               oninput="updateMixedPaymentAmount(${item.id}, this.value)">
+                        <span>R$</span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--gray); margin-top: 5px;">
+                        Taxa: R$ ${((item.amount * item.methodFee) / 100).toFixed(2)}
+                    </div>
+                `;
+                container.appendChild(methodDiv);
+            });
+
+            updatePaymentSummary();
+        }
+
+        // Atualizar o resumo do pagamento
+        function updatePaymentSummary() {
+            const totalSaleValue = parseFloat(dom.saleTotal.value) || 0;
+            let totalPaidValue = 0;
+
+            mixedPaymentMethods.forEach(item => {
+                totalPaidValue += item.amount;
+            });
+
+            const remaining = totalSaleValue - totalPaidValue;
+            
+            // Atualizar valores na tela
+            dom.totalPaid.textContent = totalPaidValue.toFixed(2);
+            dom.remainingValue.textContent = Math.abs(remaining).toFixed(2);
+            
+            // Atualizar estilo baseado no restante
+            const remainingElement = dom.remainingAmount;
+            remainingElement.className = 'remaining-amount ';
+            
+            if (remaining > 0) {
+                remainingElement.classList.add('remaining-positive');
+                remainingElement.innerHTML = `Restante a pagar: R$ <span id="remainingValue">${remaining.toFixed(2)}</span>`;
+            } else if (remaining < 0) {
+                remainingElement.classList.add('remaining-negative');
+                remainingElement.innerHTML = `Troco necessário: R$ <span id="remainingValue">${Math.abs(remaining).toFixed(2)}</span>`;
+            } else {
+                remainingElement.classList.add('remaining-zero');
+                remainingElement.innerHTML = `Valor quitado! <span id="remainingValue">${remaining.toFixed(2)}</span>`;
+            }
+        }
+
+        // Calcular o total da venda
+        function calculateSaleTotal() {
+            const productId = parseInt(dom.productSelect.value);
+            const quantity = parseInt(dom.quantityInput.value) || 1;
+
+            if (!productId) {
+                dom.saleTotal.value = '0.00';
+                return;
+            }
+
+            const product = appState.products.find(p => p.id === productId);
+            if (product) {
+                const total = product.price * quantity;
+                dom.priceInput.value = product.price.toFixed(2);
+                dom.saleTotal.value = total.toFixed(2);
+                updatePaymentSummary();
+            }
+        }
+
+        // ============ FUNÇÕES PRINCIPAIS DO APP ============
+
         // Carregar usuários do arquivo JSON externo
         async function loadUsersFromJSON() {
             try {
-                // Tente carregar do localStorage primeiro
-                const savedUsers = localStorage.getItem(DATA_KEYS.USERS);
-                if (savedUsers) {
-                    appState.users = JSON.parse(savedUsers);
-                    return;
-                }
-                
-                // Se não tiver no localStorage, use o JSON embutido
                 const response = await fetch('usuarios.json');
                 if (response.ok) {
                     const data = await response.json();
                     appState.users = data.usuarios;
                     localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
                 } else {
-                    // Fallback para o JSON embutido
-                    appState.users = [
-                        {
-                            id: 1,
-                            username: "admin",
-                            password: "admin123",
-                            nome: "Administrador",
-                            role: "admin",
-                            ativo: true,
-                            bloqueado: false,
-                            data_criacao: "2024-01-01",
-                            ultimo_acesso: null,
-                            mensagem_acesso: "Bem-vindo ao sistema de gestão!"
-                        },
-                        {
-                            id: 2,
-                            username: "cafecombrownies",
-                            password: "cafecombrownies123",
-                            nome: "Gui Castilho",
-                            role: "vendedor",
-                            ativo: true,
-                            bloqueado: false,
-                            data_criacao: "2025-12-03",
-                            ultimo_acesso: null,
-                            mensagem_acesso: "Acesso liberado para vendas"
-                        },
-                        {
-                            id: 3,
-                            username: "vendedor2",
-                            password: "venda456",
-                            nome: "Maria do Sorvete",
-                            role: "vendedor",
-                            ativo: true,
-                            bloqueado: false,
-                            data_criacao: "2024-02-01",
-                            ultimo_acesso: null,
-                            mensagem_acesso: "Continue com o bom trabalho!"
-                        },
-                        {
-                            id: 4,
-                            username: "teste",
-                            password: "teste123",
-                            nome: "Usuário Teste",
-                            role: "vendedor",
-                            ativo: true,
-                            bloqueado: true,
-                            data_criacao: "2024-02-10",
-                            ultimo_acesso: null,
-                            mensagem_acesso: "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
-                        }
-                    ];
-                    localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
+                    throw new Error('Arquivo JSON não encontrado');
                 }
             } catch (error) {
                 console.error("Erro ao carregar usuários:", error);
-                // Fallback para o JSON embutido
+                // Fallback para o JSON que você forneceu
                 appState.users = [
                     {
                         id: 1,
@@ -1786,8 +2010,8 @@
                     },
                     {
                         id: 2,
-                        username: "cafecombrownies",
-                        password: "cafecombrownies123",
+                        username: "guilhermmkt",
+                        password: "guilhermmkt123",
                         nome: "Gui Castilho",
                         role: "vendedor",
                         ativo: true,
@@ -1795,15 +2019,151 @@
                         data_criacao: "2025-12-03",
                         ultimo_acesso: null,
                         mensagem_acesso: "Acesso liberado para vendas"
+                    },
+                    {
+                        id: 3,
+                        username: "sidney",
+                        password: "sidney12345",
+                        nome: "Sidney",
+                        role: "vendedor",
+                        ativo: true,
+                        bloqueado: false,
+                        data_criacao: "2025-12-03",
+                        ultimo_acesso: null,
+                        mensagem_acesso: "Acesso liberado para vendas"
+                    },
+                    {
+                        id: 4,
+                        username: "teste",
+                        password: "teste123456789",
+                        nome: "Usuário Teste",
+                        role: "vendedor",
+                        ativo: true,
+                        bloqueado: true,
+                        data_criacao: "2024-02-10",
+                        ultimo_acesso: null,
+                        mensagem_acesso: "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
                     }
                 ];
                 localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
             }
         }
 
+        // Registrar venda com pagamento misto
+        function registerMixedPaymentSale() {
+            const productId = parseInt(dom.productSelect.value);
+            const quantity = parseInt(dom.quantityInput.value) || 1;
+            const totalSale = parseFloat(dom.saleTotal.value) || 0;
+
+            // Validações
+            if (!productId) {
+                showNotification("Selecione um produto", "danger");
+                return false;
+            }
+
+            if (quantity <= 0) {
+                showNotification("Quantidade inválida", "danger");
+                return false;
+            }
+
+            if (totalSale <= 0) {
+                showNotification("Valor da venda inválido", "danger");
+                return false;
+            }
+
+            if (mixedPaymentMethods.length === 0) {
+                showNotification("Adicione pelo menos uma forma de pagamento", "danger");
+                return false;
+            }
+
+            const product = appState.products.find(p => p.id === productId);
+            if (!product) return false;
+
+            if (product.stock < quantity) {
+                showNotification(`Estoque insuficiente de ${product.name}`, "danger");
+                return false;
+            }
+
+            // Calcular total pago
+            let totalPaid = 0;
+            mixedPaymentMethods.forEach(item => {
+                totalPaid += item.amount;
+            });
+
+            const remaining = totalSale - totalPaid;
+            if (remaining > 0) {
+                showNotification(`Falta R$ ${remaining.toFixed(2)} para completar o pagamento`, "warning");
+                return false;
+            }
+
+            // Registrar a venda para cada método de pagamento
+            mixedPaymentMethods.forEach(item => {
+                if (item.amount > 0) {
+                    const paymentMethod = appState.paymentMethods.find(p => p.id === item.methodId);
+                    if (paymentMethod) {
+                        const machineFee = paymentMethod.fee > 0 ? (item.amount * paymentMethod.fee / 100) : 0;
+                        
+                        const sale = {
+                            id: Date.now() + item.id, // ID único
+                            productId: productId,
+                            productName: product.name,
+                            quantity: Math.floor((item.amount / totalSale) * quantity),
+                            price: product.price,
+                            total: item.amount,
+                            paymentMethod: paymentMethod.name,
+                            paymentMethodId: paymentMethod.id,
+                            machineFee: machineFee,
+                            date: new Date().toISOString(),
+                            isMixedPayment: true,
+                            mixedPaymentId: item.id
+                        };
+                        
+                        appState.sales.push(sale);
+                        
+                        // Atualizar total da forma de pagamento
+                        paymentMethod.total += item.amount;
+                    }
+                }
+            });
+
+            // Atualizar estoque (venda completa)
+            updateProductStock(productId, quantity);
+            
+            saveAppData();
+            
+            // Efeitos visuais e sonoros
+            if (appState.settings.animations) {
+                playSaleAnimation();
+            }
+            
+            if (appState.settings.saleSounds) {
+                playSaleSound();
+            }
+            
+            // Atualizar dashboard
+            updateDashboard();
+            
+            // Resetar formulário
+            resetSaleForm();
+            
+            return true;
+        }
+
+        // Resetar formulário de venda
+        function resetSaleForm() {
+            dom.productSelect.value = '';
+            dom.quantityInput.value = '1';
+            dom.priceInput.value = '';
+            dom.saleTotal.value = '0.00';
+            mixedPaymentMethods = [];
+            updateMixedPaymentDisplay();
+        }
+
+        // ============ FUNÇÕES RESTANTES DO SISTEMA ============
+
         // Inicialização
         async function initApp() {
-            // Carregar usuários
+            // Carregar usuários do JSON externo
             await loadUsersFromJSON();
             
             // Verificar consentimento de cookies
@@ -1833,7 +2193,6 @@
             if (session) {
                 const sessionData = JSON.parse(session);
                 if (sessionData.expires > Date.now()) {
-                    // Sessão válida, fazer login automático
                     appState.currentUser = appState.users.find(u => u.username === sessionData.username);
                     if (appState.currentUser) {
                         showMainApp();
@@ -1841,7 +2200,6 @@
                         showLogin();
                     }
                 } else {
-                    // Sessão expirada
                     localStorage.removeItem(DATA_KEYS.SESSION);
                     showLogin();
                 }
@@ -1862,49 +2220,27 @@
 
         // Carregar dados
         function loadAppData() {
-            // Carregar informações do negócio
             const savedBusinessInfo = localStorage.getItem(DATA_KEYS.BUSINESS_INFO);
-            if (savedBusinessInfo) {
-                appState.businessInfo = JSON.parse(savedBusinessInfo);
-            }
+            if (savedBusinessInfo) appState.businessInfo = JSON.parse(savedBusinessInfo);
             
-            // Carregar produtos
             const savedProducts = localStorage.getItem(DATA_KEYS.PRODUCTS);
-            if (savedProducts) {
-                appState.products = JSON.parse(savedProducts);
-            }
+            if (savedProducts) appState.products = JSON.parse(savedProducts);
             
-            // Carregar vendas
             const savedSales = localStorage.getItem(DATA_KEYS.SALES);
-            if (savedSales) {
-                appState.sales = JSON.parse(savedSales);
-            }
+            if (savedSales) appState.sales = JSON.parse(savedSales);
             
-            // Carregar formas de pagamento
             const savedPaymentMethods = localStorage.getItem(DATA_KEYS.PAYMENT_METHODS);
-            if (savedPaymentMethods) {
-                appState.paymentMethods = JSON.parse(savedPaymentMethods);
-            }
+            if (savedPaymentMethods) appState.paymentMethods = JSON.parse(savedPaymentMethods);
             
-            // Carregar custos
             const savedCosts = localStorage.getItem(DATA_KEYS.COSTS);
-            if (savedCosts) {
-                appState.costs = JSON.parse(savedCosts);
-            }
+            if (savedCosts) appState.costs = JSON.parse(savedCosts);
             
-            // Carregar CMV
             const savedCMV = localStorage.getItem(DATA_KEYS.CMV);
-            if (savedCMV) {
-                appState.cmv = JSON.parse(savedCMV);
-            }
+            if (savedCMV) appState.cmv = JSON.parse(savedCMV);
             
-            // Carregar configurações
             const savedSettings = localStorage.getItem(DATA_KEYS.SETTINGS);
-            if (savedSettings) {
-                appState.settings = JSON.parse(savedSettings);
-            }
+            if (savedSettings) appState.settings = JSON.parse(savedSettings);
             
-            // Atualizar data de acesso
             updateLastAccess();
         }
 
@@ -1932,39 +2268,32 @@
 
         // Atualizar informações do negócio na interface
         function updateBusinessInfo() {
-            // Atualizar cores
             document.documentElement.style.setProperty('--primary', appState.businessInfo.themeColor);
             
-            // Atualizar logo/avatar
             if (appState.businessInfo.logo) {
                 dom.businessLogo.src = appState.businessInfo.logo;
                 dom.businessAvatar.src = appState.businessInfo.logo;
                 dom.businessPhotoPreview.src = appState.businessInfo.logo;
             } else {
-                // Usar ícone padrão
                 const defaultIcon = "https://cdn-icons-png.flaticon.com/512/2173/2173475.png";
                 dom.businessLogo.src = defaultIcon;
                 dom.businessAvatar.src = defaultIcon;
                 dom.businessPhotoPreview.src = defaultIcon;
             }
             
-            // Atualizar nomes
             dom.businessNameLogin.textContent = appState.businessInfo.name;
             dom.businessNameHeader.textContent = appState.businessInfo.name;
             dom.businessSlogan.textContent = appState.businessInfo.slogan;
             dom.businessNameInput.value = appState.businessInfo.name;
             dom.businessSloganInput.value = appState.businessInfo.slogan;
             
-            // Atualizar fundo de troco
             dom.changeFund.textContent = `R$ ${appState.businessInfo.changeFund.toFixed(2)}`;
             dom.changeFundInput.value = appState.businessInfo.changeFund;
             
-            // Atualizar cores selecionadas
             dom.colorOptions.forEach(option => {
                 option.classList.toggle('selected', option.dataset.color === appState.businessInfo.themeColor);
             });
             
-            // Atualizar tema
             updateTheme();
         }
 
@@ -2002,7 +2331,6 @@
             );
             
             if (user) {
-                // Verificar se o usuário está ativo e não bloqueado
                 if (!user.ativo) {
                     showNotification("Usuário inativo", "danger");
                     return false;
@@ -2015,10 +2343,8 @@
 
                 appState.currentUser = user;
                 
-                // Atualizar último acesso
                 updateLastAccess();
                 
-                // Criar sessão (expira em 7 dias)
                 const session = {
                     username: user.username,
                     expires: Date.now() + (7 * 24 * 60 * 60 * 1000)
@@ -2055,10 +2381,8 @@
 
         // Produtos
         function loadProducts() {
-            // Limpar select
             dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
             
-            // Adicionar produtos
             appState.products.forEach(product => {
                 const option = document.createElement('option');
                 option.value = product.id;
@@ -2068,7 +2392,6 @@
                 dom.productSelect.appendChild(option);
             });
             
-            // Atualizar grid de produtos
             updateProductsGrid();
         }
 
@@ -2095,7 +2418,6 @@
             if (product) {
                 product.stock -= quantity;
                 
-                // Verificar estoque baixo
                 if (product.stock <= product.minStock && appState.settings.stockNotifications) {
                     showNotification(`Estoque baixo: ${product.name}`, "warning");
                 }
@@ -2155,23 +2477,13 @@
             return icons[category] || 'box';
         }
 
-        // Formas de Pagamento - CORRIGIDA A EXCLUSÃO
+        // Formas de Pagamento
         function loadPaymentMethods() {
-            // Limpar select
-            dom.paymentMethodSale.innerHTML = '<option value="">Selecione a forma</option>';
-            
             // Limpar tabela
             dom.paymentMethodsList.innerHTML = '';
             
             // Adicionar formas de pagamento
             appState.paymentMethods.forEach(method => {
-                // Adicionar ao select
-                const option = document.createElement('option');
-                option.value = method.id;
-                option.textContent = `${method.name} ${method.fee > 0 ? `(${method.fee}%)` : ''}`;
-                dom.paymentMethodSale.appendChild(option);
-                
-                // Adicionar à tabela
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${method.name}</td>
@@ -2215,7 +2527,6 @@
 
         // Função global para exclusão de forma de pagamento
         window.deletePaymentMethod = function(id) {
-            // Não permitir excluir as formas básicas se forem poucas
             if (appState.paymentMethods.length <= 2) {
                 showNotification("Você precisa ter pelo menos 2 formas de pagamento", "warning");
                 return;
@@ -2231,10 +2542,8 @@
 
         // Custos
         function loadCosts() {
-            // Limpar tabela
             dom.costsList.innerHTML = '';
             
-            // Adicionar custos
             appState.costs.forEach(cost => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -2305,7 +2614,6 @@
             
             const cmv = initialStock + purchases - finalStock;
             
-            // Atualizar estado
             appState.cmv = {
                 initialStock: initialStock,
                 purchases: purchases,
@@ -2314,88 +2622,12 @@
             };
             saveAppData();
             
-            // Mostrar resultado
             dom.cmvResultValue.textContent = cmv.toFixed(2);
             dom.cmvResult.style.display = 'block';
             
-            // Atualizar dashboard
             updateDashboard();
             
             showNotification(`CMV calculado: R$ ${cmv.toFixed(2)}`, "success");
-        }
-
-        // Vendas
-        function registerSale(productId, quantity, paymentMethodId) {
-            const product = appState.products.find(p => p.id === productId);
-            if (!product) return false;
-            
-            if (product.stock < quantity) {
-                showNotification(`Estoque insuficiente de ${product.name}`, "danger");
-                return false;
-            }
-            
-            const paymentMethod = appState.paymentMethods.find(p => p.id === paymentMethodId);
-            if (!paymentMethod) {
-                showNotification("Selecione uma forma de pagamento", "danger");
-                return false;
-            }
-            
-            const total = product.price * parseInt(quantity);
-            const machineFee = paymentMethod.fee > 0 ? (total * paymentMethod.fee / 100) : 0;
-            
-            const sale = {
-                id: Date.now(),
-                productId: productId,
-                productName: product.name,
-                quantity: parseInt(quantity),
-                price: product.price,
-                total: total,
-                paymentMethod: paymentMethod.name,
-                paymentMethodId: paymentMethodId,
-                machineFee: machineFee,
-                date: new Date().toISOString()
-            };
-            
-            appState.sales.push(sale);
-            
-            // Atualizar total da forma de pagamento
-            paymentMethod.total += total;
-            
-            // Atualizar estoque
-            updateProductStock(productId, quantity);
-            
-            saveAppData();
-            
-            // Efeitos visuais e sonoros
-            if (appState.settings.animations) {
-                playSaleAnimation();
-            }
-            
-            if (appState.settings.saleSounds) {
-                playSaleSound();
-            }
-            
-            // Atualizar dashboard
-            updateDashboard();
-            
-            return true;
-        }
-
-        function calculateSale() {
-            const productId = parseInt(dom.productSelect.value);
-            const quantity = parseInt(dom.quantityInput.value) || 1;
-            const paymentMethodId = parseInt(dom.paymentMethodSale.value);
-            
-            if (!productId) return;
-            
-            const product = appState.products.find(p => p.id === productId);
-            const paymentMethod = appState.paymentMethods.find(p => p.id === paymentMethodId);
-            
-            if (product) {
-                dom.priceInput.value = product.price.toFixed(2);
-                const total = product.price * quantity;
-                dom.totalPrice.value = total.toFixed(2);
-            }
         }
 
         // Dashboard
@@ -2403,7 +2635,6 @@
             const filter = appState.settings.currentFilter;
             let filteredSales = appState.sales;
             
-            // Aplicar filtro
             if (filter !== 'all') {
                 const now = new Date();
                 filteredSales = appState.sales.filter(sale => {
@@ -2424,40 +2655,22 @@
                 });
             }
             
-            // Calcular totais
             const totalSales = filteredSales.reduce((sum, sale) => sum + sale.total, 0);
             const totalProducts = filteredSales.reduce((sum, sale) => sum + sale.quantity, 0);
-            
-            // Calcular CMV
             const cmv = appState.cmv.calculatedCMV || 0;
-            
-            // Calcular taxas da maquininha
             const machineFees = filteredSales.reduce((sum, sale) => sum + sale.machineFee, 0);
-            
-            // Calcular outros custos
             const otherCosts = appState.costs.reduce((sum, cost) => {
-                if (cost.category !== 'salary') {
-                    return sum + cost.value;
-                }
+                if (cost.category !== 'salary') return sum + cost.value;
                 return sum;
             }, 0);
-            
-            // Calcular salário
             const salary = appState.costs.reduce((sum, cost) => {
-                if (cost.category === 'salary') {
-                    return sum + cost.value;
-                }
+                if (cost.category === 'salary') return sum + cost.value;
                 return sum;
             }, 0);
-            
-            // Calcular faturamento bruto e líquido
             const grossRevenue = totalSales;
             const netRevenue = grossRevenue - cmv - machineFees - otherCosts - salary;
-            
-            // Calcular margem líquida
             const margin = grossRevenue > 0 ? ((netRevenue / grossRevenue) * 100) : 0;
             
-            // Atualizar valores
             dom.totalSalesValue.textContent = `R$ ${totalSales.toFixed(2)}`;
             dom.totalProductsSold.textContent = totalProducts.toString();
             dom.grossRevenue.textContent = `R$ ${grossRevenue.toFixed(2)}`;
@@ -2466,19 +2679,16 @@
             dom.machineFee.textContent = `R$ ${machineFees.toFixed(2)}`;
             dom.salaryValue.textContent = `R$ ${salary.toFixed(2)}`;
             
-            // Atualizar financeiro
             dom.totalRevenue.textContent = `R$ ${grossRevenue.toFixed(2)}`;
             dom.profitValue.textContent = `R$ ${netRevenue.toFixed(2)}`;
             dom.marginValue.textContent = `${margin.toFixed(1)}%`;
             
-            // Atualizar gráfico
             updateSalesChart(filteredSales);
             updateFinanceChart();
         }
 
         // Gráficos
         function setupCharts() {
-            // Gráfico de vendas
             window.salesChart = new Chart(dom.salesChart, {
                 type: 'line',
                 data: {
@@ -2513,7 +2723,6 @@
                 }
             });
             
-            // Gráfico financeiro
             window.financeChart = new Chart(dom.financeChart, {
                 type: 'doughnut',
                 data: {
@@ -2543,7 +2752,6 @@
         }
 
         function updateSalesChart(filteredSales) {
-            // Agrupar vendas por dia
             const salesByDay = {};
             filteredSales.forEach(sale => {
                 const date = new Date(sale.date).toLocaleDateString('pt-BR', { weekday: 'short' });
@@ -2561,15 +2769,11 @@
             const cmv = appState.cmv.calculatedCMV || 0;
             const machineFees = appState.sales.reduce((sum, sale) => sum + sale.machineFee, 0);
             const otherCosts = appState.costs.reduce((sum, cost) => {
-                if (cost.category !== 'salary') {
-                    return sum + cost.value;
-                }
+                if (cost.category !== 'salary') return sum + cost.value;
                 return sum;
             }, 0);
             const salary = appState.costs.reduce((sum, cost) => {
-                if (cost.category === 'salary') {
-                    return sum + cost.value;
-                }
+                if (cost.category === 'salary') return sum + cost.value;
                 return sum;
             }, 0);
             const netProfit = totalSales - cmv - machineFees - otherCosts - salary;
@@ -2594,7 +2798,6 @@
         }
 
         function playSaleSound() {
-            // Criar som simples
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
@@ -2739,7 +2942,6 @@
                 return;
             }
             
-            // Calcular média diária atual
             const dailySales = appState.sales.reduce((acc, sale) => {
                 const date = new Date(sale.date).toLocaleDateString('pt-BR');
                 if (!acc[date]) acc[date] = 0;
@@ -2750,8 +2952,6 @@
             const daysCount = Object.keys(dailySales).length || 1;
             const totalSales = Object.values(dailySales).reduce((a, b) => a + b, 0);
             const averageDaily = totalSales / daysCount;
-            
-            // Calcular projeção
             const projection = averageDaily * targetPeriod;
             const neededDaily = targetRevenue / targetPeriod;
             const growthNeeded = ((neededDaily - averageDaily) / averageDaily) * 100;
@@ -2810,7 +3010,6 @@
                 }
             });
             
-            // Permitir login com Enter
             dom.passwordInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     dom.loginBtn.click();
@@ -2842,44 +3041,22 @@
                 });
             });
             
-            // Vendas
-            dom.productSelect.addEventListener('change', calculateSale);
-            dom.quantityInput.addEventListener('input', calculateSale);
-            dom.paymentMethodSale.addEventListener('change', calculateSale);
+            // Vendas (pagamento misto)
+            dom.productSelect.addEventListener('change', calculateSaleTotal);
+            dom.quantityInput.addEventListener('input', calculateSaleTotal);
+            
+            // Botão para adicionar método de pagamento misto
+            dom.addPaymentMethodBtn.addEventListener('click', addMixedPaymentMethod);
+            
+            // Registrar venda com pagamento misto
             dom.registerSaleBtn.addEventListener('click', () => {
-                const productId = parseInt(dom.productSelect.value);
-                const quantity = parseInt(dom.quantityInput.value) || 1;
-                const paymentMethodId = parseInt(dom.paymentMethodSale.value);
-                
-                if (!productId) {
-                    showNotification("Selecione um produto", "danger");
-                    return;
-                }
-                
-                if (quantity <= 0) {
-                    showNotification("Quantidade inválida", "danger");
-                    return;
-                }
-                
-                if (!paymentMethodId) {
-                    showNotification("Selecione uma forma de pagamento", "danger");
-                    return;
-                }
-                
-                if (registerSale(productId, quantity, paymentMethodId)) {
-                    showNotification(`Venda registrada: R$ ${(quantity * parseFloat(dom.priceInput.value)).toFixed(2)}`, "success");
-                    
-                    // Resetar formulário
-                    dom.productSelect.value = '';
-                    dom.quantityInput.value = '1';
-                    dom.priceInput.value = '';
-                    dom.paymentMethodSale.value = '';
-                    dom.totalPrice.value = '';
+                if (registerMixedPaymentSale()) {
+                    showNotification(`Venda registrada com sucesso!`, "success");
                 }
             });
             
-            // Formas de Pagamento
-            dom.addPaymentMethodBtn.addEventListener('click', () => {
+            // Formas de Pagamento (gerenciamento)
+            dom.savePaymentMethodBtn.addEventListener('click', () => {
                 const name = dom.paymentMethodName.value.trim();
                 const type = dom.paymentMethodType.value;
                 const fee = dom.paymentMethodFee.value;
@@ -2891,7 +3068,6 @@
                 
                 addPaymentMethod(name, type, fee);
                 
-                // Resetar formulário
                 dom.paymentMethodName.value = '';
                 dom.paymentMethodFee.value = '';
             });
@@ -2915,7 +3091,6 @@
                 
                 addCost(description, category, value, date);
                 
-                // Resetar formulário
                 dom.costDescription.value = '';
                 dom.costValue.value = '';
                 dom.costDate.value = '';
@@ -2939,7 +3114,6 @@
                 
                 addProduct(name, category, price, cost, stock);
                 
-                // Resetar formulário
                 dom.productName.value = '';
                 dom.productPrice.value = '';
                 dom.productCost.value = '';
@@ -3100,19 +3274,16 @@
 
         // Navegação entre seções
         function setActiveSection(sectionId) {
-            // Atualizar tabs
             dom.tabs.forEach(tab => {
                 tab.classList.toggle('active', tab.dataset.tab === sectionId);
             });
             
-            // Atualizar seções
             dom.sections.forEach(section => {
                 section.classList.toggle('active', section.id === sectionId);
             });
             
             appState.currentSection = sectionId;
             
-            // Atualizar dados específicos da seção
             if (sectionId === 'dashboard') {
                 updateDashboard();
             } else if (sectionId === 'finance') {
@@ -3121,7 +3292,6 @@
                 loadPaymentMethods();
             } else if (sectionId === 'costs') {
                 loadCosts();
-                // Preencher valores do CMV
                 dom.initialStock.value = appState.cmv.initialStock;
                 dom.purchases.value = appState.cmv.purchases;
                 dom.finalStock.value = appState.cmv.finalStock;
@@ -3129,6 +3299,9 @@
                     dom.cmvResultValue.textContent = appState.cmv.calculatedCMV.toFixed(2);
                     dom.cmvResult.style.display = 'block';
                 }
+            } else if (sectionId === 'sales') {
+                resetSaleForm();
+                updateMixedPaymentDisplay();
             }
         }
 
@@ -3145,6 +3318,11 @@
                 showNotification(`Estoque de ${product.name} atualizado!`, "success");
             }
         };
+
+        // Funções globais para pagamento misto
+        window.addMixedPaymentMethod = addMixedPaymentMethod;
+        window.removeMixedPaymentMethod = removeMixedPaymentMethod;
+        window.updateMixedPaymentAmount = updateMixedPaymentAmount;
 
         // Inicializar aplicativo
         document.addEventListener('DOMContentLoaded', initApp);
