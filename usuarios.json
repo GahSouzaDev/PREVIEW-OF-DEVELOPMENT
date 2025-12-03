@@ -26,15 +26,15 @@
     },
     {
       "id": 3,
-      "username": "vendedor2",
-      "password": "venda456",
-      "nome": "Maria do Sorvete",
+      "username": "sidney",
+      "password": "sidney12345",
+      "nome": "Sidney",
       "role": "vendedor",
       "ativo": true,
       "bloqueado": false,
-      "data_criacao": "2024-02-01",
+      "data_criacao": "2025-12-03",
       "ultimo_acesso": null,
-      "mensagem_acesso": "Continue com o bom trabalho!"
+      "mensagem_acesso": "Acesso liberado para vendas"
     },
     {
       "id": 4,
