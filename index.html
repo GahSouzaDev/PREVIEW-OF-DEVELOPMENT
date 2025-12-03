@@ -494,10 +494,19 @@
             color: var(--dark);
         }
 
+        .mixed-payment-select {
+            width: 150px;
+            padding: 8px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            border: 1px solid #E0E0E0;
+        }
+
         .mixed-payment-amount {
             display: flex;
             gap: 10px;
             align-items: center;
+            margin-top: 0.5rem;
         }
 
         .mixed-payment-amount input {
@@ -528,6 +537,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-size: 0.8rem;
+            border: none;
         }
 
         .remove-payment-btn:hover {
@@ -905,6 +915,10 @@
             .mixed-payment-amount input {
                 width: 100%;
             }
+            
+            .mixed-payment-select {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1245,7 +1259,7 @@
                     <div class="mixed-payment-section">
                         <div class="mixed-payment-title">
                             <h3><i class="fas fa-money-check-alt"></i> Pagamento Misto</h3>
-                            <button id="addPaymentMethodBtn" class="add-payment-btn">
+                            <button id="addMixedPaymentBtn" class="add-payment-btn">
                                 <i class="fas fa-plus"></i> Adicionar Forma
                             </button>
                         </div>
@@ -1765,7 +1779,7 @@
             recentSalesList: document.getElementById('recentSalesList'),
             
             // Pagamento Misto
-            addPaymentMethodBtn: document.getElementById('addPaymentMethodBtn'),
+            addMixedPaymentBtn: document.getElementById('addMixedPaymentBtn'),
             mixedPaymentContainer: document.getElementById('mixedPaymentContainer'),
             totalPaid: document.getElementById('totalPaid'),
             remainingValue: document.getElementById('remainingValue'),
@@ -1845,6 +1859,15 @@
 
         // ============ FUNÇÕES PARA PAGAMENTO MISTO ============
 
+        // Gerar opções HTML para seleção de métodos de pagamento
+        function generatePaymentMethodOptions() {
+            let options = '';
+            appState.paymentMethods.forEach(method => {
+                options += `<option value="${method.id}">${method.name} ${method.fee > 0 ? `(${method.fee}%)` : ''}</option>`;
+            });
+            return options;
+        }
+
         // Adicionar um método de pagamento à lista de pagamento misto
         function addMixedPaymentMethod() {
             if (appState.paymentMethods.length === 0) {
@@ -1853,14 +1876,15 @@
             }
 
             const paymentId = nextPaymentId++;
-            const method = appState.paymentMethods[0]; // Pega o primeiro método por padrão
+            // Usa o primeiro método como padrão, mas permite mudar
+            const defaultMethod = appState.paymentMethods[0];
             
             mixedPaymentMethods.push({
                 id: paymentId,
-                methodId: method.id,
-                methodName: method.name,
-                methodType: method.type,
-                methodFee: method.fee,
+                methodId: defaultMethod.id,
+                methodName: defaultMethod.name,
+                methodType: defaultMethod.type,
+                methodFee: defaultMethod.fee,
                 amount: 0
             });
 
@@ -1871,6 +1895,21 @@
         function removeMixedPaymentMethod(id) {
             mixedPaymentMethods = mixedPaymentMethods.filter(item => item.id !== id);
             updateMixedPaymentDisplay();
+        }
+
+        // Atualizar o método de pagamento selecionado
+        function updateMixedPaymentMethod(id, methodId) {
+            const item = mixedPaymentMethods.find(item => item.id === id);
+            if (item) {
+                const method = appState.paymentMethods.find(m => m.id === parseInt(methodId));
+                if (method) {
+                    item.methodId = method.id;
+                    item.methodName = method.name;
+                    item.methodType = method.type;
+                    item.methodFee = method.fee;
+                    updatePaymentSummary();
+                }
+            }
         }
 
         // Atualizar o valor de um método de pagamento
@@ -1902,8 +1941,12 @@
                 methodDiv.className = 'mixed-payment-item';
                 methodDiv.innerHTML = `
                     <div class="mixed-payment-header">
-                        <div class="mixed-payment-method">
-                            ${item.methodName} ${item.methodFee > 0 ? `(${item.methodFee}%)` : ''}
+                        <div>
+                            <select class="mixed-payment-select" 
+                                    onchange="updateMixedPaymentMethod(${item.id}, this.value)"
+                                    data-id="${item.id}">
+                                ${generatePaymentMethodOptions()}
+                            </select>
                         </div>
                         <button onclick="removeMixedPaymentMethod(${item.id})" class="remove-payment-btn">
                             <i class="fas fa-times"></i> Remover
@@ -1923,6 +1966,11 @@
                         Taxa: R$ ${((item.amount * item.methodFee) / 100).toFixed(2)}
                     </div>
                 `;
+                
+                // Selecionar o método correto no dropdown
+                const select = methodDiv.querySelector('.mixed-payment-select');
+                select.value = item.methodId;
+                
                 container.appendChild(methodDiv);
             });
 
@@ -2096,29 +2144,38 @@
                 return false;
             }
 
-            // Registrar a venda para cada método de pagamento
+            // Registrar uma venda principal
+            const mainSale = {
+                id: Date.now(),
+                productId: productId,
+                productName: product.name,
+                quantity: quantity,
+                price: product.price,
+                total: totalSale,
+                paymentMethod: "Pagamento Misto",
+                paymentMethodId: null,
+                machineFee: 0, // Será calculado abaixo
+                date: new Date().toISOString(),
+                isMixedPayment: true,
+                mixedPaymentDetails: []
+            };
+
+            // Calcular taxas e adicionar detalhes
+            let totalMachineFee = 0;
             mixedPaymentMethods.forEach(item => {
                 if (item.amount > 0) {
                     const paymentMethod = appState.paymentMethods.find(p => p.id === item.methodId);
                     if (paymentMethod) {
                         const machineFee = paymentMethod.fee > 0 ? (item.amount * paymentMethod.fee / 100) : 0;
+                        totalMachineFee += machineFee;
                         
-                        const sale = {
-                            id: Date.now() + item.id, // ID único
-                            productId: productId,
-                            productName: product.name,
-                            quantity: Math.floor((item.amount / totalSale) * quantity),
-                            price: product.price,
-                            total: item.amount,
-                            paymentMethod: paymentMethod.name,
-                            paymentMethodId: paymentMethod.id,
-                            machineFee: machineFee,
-                            date: new Date().toISOString(),
-                            isMixedPayment: true,
-                            mixedPaymentId: item.id
-                        };
-                        
-                        appState.sales.push(sale);
+                        // Adicionar ao detalhe da venda mista
+                        mainSale.mixedPaymentDetails.push({
+                            methodId: paymentMethod.id,
+                            methodName: paymentMethod.name,
+                            amount: item.amount,
+                            fee: machineFee
+                        });
                         
                         // Atualizar total da forma de pagamento
                         paymentMethod.total += item.amount;
@@ -2126,7 +2183,13 @@
                 }
             });
 
-            // Atualizar estoque (venda completa)
+            // Atualizar taxa da maquininha na venda principal
+            mainSale.machineFee = totalMachineFee;
+            
+            // Adicionar venda ao histórico
+            appState.sales.push(mainSale);
+
+            // Atualizar estoque
             updateProductStock(productId, quantity);
             
             saveAppData();
@@ -2146,6 +2209,17 @@
             // Resetar formulário
             resetSaleForm();
             
+            // Mostrar resumo da venda
+            let summary = `Venda registrada: ${product.name} x${quantity}<br>`;
+            summary += `Total: R$ ${totalSale.toFixed(2)}<br>`;
+            summary += `Formas de pagamento:<br>`;
+            mixedPaymentMethods.forEach(item => {
+                if (item.amount > 0) {
+                    summary += `- ${item.methodName}: R$ ${item.amount.toFixed(2)}<br>`;
+                }
+            });
+            
+            showNotification(summary, "success");
             return true;
         }
 
@@ -2522,6 +2596,10 @@
             appState.paymentMethods.push(newMethod);
             saveAppData();
             loadPaymentMethods();
+            // Atualizar display do pagamento misto se estiver na seção de vendas
+            if (appState.currentSection === 'sales') {
+                updateMixedPaymentDisplay();
+            }
             showNotification(`Forma de pagamento "${name}" adicionada com sucesso!`, "success");
         }
 
@@ -2536,6 +2614,10 @@
                 appState.paymentMethods = appState.paymentMethods.filter(m => m.id !== id);
                 saveAppData();
                 loadPaymentMethods();
+                // Atualizar display do pagamento misto se estiver na seção de vendas
+                if (appState.currentSection === 'sales') {
+                    updateMixedPaymentDisplay();
+                }
                 showNotification("Forma de pagamento excluída com sucesso!", "success");
             }
         };
@@ -2821,7 +2903,7 @@
 
         // Notificações
         function showNotification(message, type = "success") {
-            dom.notificationText.textContent = message;
+            dom.notificationText.innerHTML = message;
             dom.notification.className = `notification ${type}`;
             dom.notification.classList.add('show');
             
@@ -3046,7 +3128,7 @@
             dom.quantityInput.addEventListener('input', calculateSaleTotal);
             
             // Botão para adicionar método de pagamento misto
-            dom.addPaymentMethodBtn.addEventListener('click', addMixedPaymentMethod);
+            dom.addMixedPaymentBtn.addEventListener('click', addMixedPaymentMethod);
             
             // Registrar venda com pagamento misto
             dom.registerSaleBtn.addEventListener('click', () => {
@@ -3323,6 +3405,7 @@
         window.addMixedPaymentMethod = addMixedPaymentMethod;
         window.removeMixedPaymentMethod = removeMixedPaymentMethod;
         window.updateMixedPaymentAmount = updateMixedPaymentAmount;
+        window.updateMixedPaymentMethod = updateMixedPaymentMethod;
 
         // Inicializar aplicativo
         document.addEventListener('DOMContentLoaded', initApp);
