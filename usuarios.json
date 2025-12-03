@@ -39,7 +39,7 @@
     {
       "id": 4,
       "username": "teste",
-      "password": "teste123",
+      "password": "teste123456789",
       "nome": "Usuário Teste",
       "role": "vendedor",
       "ativo": true,
