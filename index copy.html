@@ -29,31 +29,6 @@
             --transition: all 0.3s ease;
             --border-radius: 16px;
         }
-        /* Estilo para botões de ação em produtos */
-.product-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.product-actions button {
-    flex: 1;
-    padding: 8px 12px !important;
-    font-size: 0.9rem !important;
-}
-
-/* Modal de confirmação de exclusão */
-.delete-confirm-modal .modal-content {
-    max-width: 400px;
-}
-
-.delete-warning {
-    background: rgba(244, 67, 54, 0.1);
-    border: 1px solid rgba(244, 67, 54, 0.3);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem 0;
-}
 
         [data-theme="dark"] {
             --primary: #FFB74D;
@@ -2048,15 +2023,12 @@
                         </div>
                     </div>
                     
-                    <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
-    <button id="addProductBtn">
-        <i class="fas fa-plus"></i> Adicionar Produto
-    </button>
-    <button id="cancelEditBtn" class="secondary" style="display: none;">
-        <!--<i class="fas fa-times"></i> Cancelar Edição-->
-    </button>
-</div>
-
+                    <div style="margin-top: 1.5rem;">
+                        <button id="addProductBtn">
+                            <i class="fas fa-plus"></i> Adicionar Produto
+                        </button>
+                    </div>
+                </div>
                 
                 <h3 style="margin: 1.5rem 0 1rem;"><i class="fas fa-boxes"></i> Meus Produtos</h3>
                 <div class="products-grid" id="productsList">
@@ -3376,12 +3348,6 @@
             
             // Configurar eventos para cálculo automático de lucro
             setupGoalCalculationEvents();
-            // Funções globais para produtos
-window.showEditProductModal = showEditProductModal;
-window.confirmDeleteProduct = confirmDeleteProduct;
-window.deleteProduct = deleteProduct;
-window.hideDeleteConfirmModal = hideDeleteConfirmModal;
-window.cancelEdit = cancelEdit;
         }
 
         // Configurar eventos para cálculo automático de lucro
@@ -3641,151 +3607,42 @@ window.cancelEdit = cancelEdit;
         }
 
         // Produtos
-     function loadProducts() {
-    dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
-    
-    appState.products.forEach(product => {
-        const option = document.createElement('option');
-        option.value = product.id;
-        option.textContent = `${product.name} - R$ ${product.price.toFixed(2)}`;
-        option.dataset.price = product.price;
-        option.dataset.cost = product.cost || 0;
-        dom.productSelect.appendChild(option);
-    });
-    
-    updateProductsGrid();
-    
-    // Mostrar botão de cancelar se estiver editando
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-    if (cancelEditBtn) {
-        if (dom.addProductBtn.dataset.editId) {
-            cancelEditBtn.style.display = 'inline-flex';
-        } else {
-            cancelEditBtn.style.display = 'none';
+        function loadProducts() {
+            dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
+            
+            appState.products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} - R$ ${product.price.toFixed(2)}`;
+                option.dataset.price = product.price;
+                option.dataset.cost = product.cost || 0;
+                dom.productSelect.appendChild(option);
+            });
+            
+            updateProductsGrid();
         }
-    }
-}
+
         function addProduct(name, category, price, cost, stock) {
-    const editId = dom.addProductBtn.dataset.editId;
-    
-    if (editId) {
-        // Modo edição
-        const productIndex = appState.products.findIndex(p => p.id === parseInt(editId));
-        if (productIndex !== -1) {
-            appState.products[productIndex] = {
-                ...appState.products[productIndex],
+            const newProduct = {
+                id: Date.now(),
                 name: name,
                 category: category,
                 price: parseFloat(price),
                 cost: parseFloat(cost) || 0,
                 stock: parseInt(stock),
-                updatedAt: new Date().toISOString()
+                minStock: 5,
+                createdAt: new Date().toISOString()
             };
             
+            appState.products.push(newProduct);
             saveAppData();
             loadProducts();
-            cancelEdit();
-            showNotification(`Produto "${name}" atualizado com sucesso!`, "success");
+            showNotification(`Produto "${name}" adicionado com sucesso!`, "success");
             
             // Sincronizar com produtos de meta se necessário
             syncWithGoalProducts(name, cost, price);
         }
-    } else {
-        // Modo criação
-        const newProduct = {
-            id: Date.now(),
-            name: name,
-            category: category,
-            price: parseFloat(price),
-            cost: parseFloat(cost) || 0,
-            stock: parseInt(stock),
-            minStock: 5,
-            createdAt: new Date().toISOString()
-        };
-        
-        appState.products.push(newProduct);
-        saveAppData();
-        loadProducts();
-        resetProductForm();
-        showNotification(`Produto "${name}" adicionado com sucesso!`, "success");
-        
-        // Sincronizar com produtos de meta se necessário
-        syncWithGoalProducts(name, cost, price);
-    }
-}
 
-// Confirmar exclusão de produto
-function confirmDeleteProduct(productId) {
-    const product = appState.products.find(p => p.id === productId);
-    if (!product) return;
-    
-    // Criar modal de confirmação
-    const modalHtml = `
-        <div class="modal show" id="deleteConfirmModal">
-            <div class="modal-content">
-                <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
-                <p>Tem certeza que deseja excluir o produto <strong>"${product.name}"</strong>?</p>
-                <p style="color: var(--danger); margin-top: 1rem;">
-                    <i class="fas fa-warning"></i> Esta ação não pode ser desfeita!
-                </p>
-                <div class="modal-actions">
-                    <button onclick="hideDeleteConfirmModal()" class="secondary">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                    <button onclick="deleteProduct(${productId})" class="danger">
-                        <i class="fas fa-trash"></i> Excluir Produto
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Adicionar modal ao corpo
-    const modalDiv = document.createElement('div');
-    modalDiv.innerHTML = modalHtml;
-    document.body.appendChild(modalDiv);
-}
-
-// Esconder modal de confirmação
-function hideDeleteConfirmModal() {
-    const modal = document.getElementById('deleteConfirmModal');
-    if (modal) {
-        modal.remove();
-    }
-}
-
-// Excluir produto definitivamente
-function deleteProduct(productId) {
-    const product = appState.products.find(p => p.id === productId);
-    if (!product) return;
-    
-    const productName = product.name;
-    
-    // Verificar se o produto tem vendas associadas
-    const hasSales = appState.sales.some(sale => sale.productId === productId);
-    
-    if (hasSales) {
-        showNotification(`O produto "${productName}" tem vendas associadas e não pode ser excluído.`, "warning");
-        hideDeleteConfirmModal();
-        return;
-    }
-    
-    // Remover produto
-    appState.products = appState.products.filter(p => p.id !== productId);
-    saveAppData();
-    loadProducts();
-    hideDeleteConfirmModal();
-    showNotification(`Produto "${productName}" excluído com sucesso!`, "success");
-    
-    // Remover também dos produtos de meta se existir
-    const goalProductIndex = goalState.goalProducts.findIndex(p => p.name === productName);
-    if (goalProductIndex !== -1) {
-        goalState.goalProducts.splice(goalProductIndex, 1);
-        saveGoalData();
-        updateGoalProductsDisplay();
-        updateGoalDisplay();
-    }
-}
         // Sincronizar produto com sistema de metas
         function syncWithGoalProducts(name, cost, price) {
             // Verificar se já existe nos produtos de meta
@@ -3830,90 +3687,45 @@ function deleteProduct(productId) {
             }
         }
 
-  function updateProductsGrid() {
-    dom.productsList.innerHTML = '';
-    
-    if (appState.products.length === 0) {
-        dom.productsList.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
-                <h3>Nenhum produto cadastrado</h3>
-                <p>Adicione seus produtos para começar a vender</p>
-            </div>
-        `;
-        return;
-    }
-    
-    appState.products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <div class="product-image">
-                <i class="fas fa-${getProductIcon(product.category)}"></i>
-            </div>
-            <div class="product-info">
-                <div class="product-name">${product.name}</div>
-                <div class="product-price">R$ ${product.price.toFixed(2)}</div>
-                <div class="product-stock ${product.stock <= product.minStock ? 'stock-low' : ''}">
-                    Estoque: ${product.stock} ${product.stock <= product.minStock ? '⚠️ Baixo' : ''}
-                </div>
-                <div style="font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem;">
-                    Custo: R$ ${product.cost ? product.cost.toFixed(2) : '0.00'}
-                </div>
-                <div style="display: flex; gap: 8px; margin-top: 10px;">
-                    <button onclick="showEditProductModal(${product.id})" class="btn-small info" style="flex: 1;">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button onclick="confirmDeleteProduct(${product.id})" class="btn-small danger" style="flex: 1;">
-                        <i class="fas fa-trash"></i> Excluir
-                    </button>
-                </div>
-            </div>
-        `;
-        dom.productsList.appendChild(card);
-    });
-}
+        function updateProductsGrid() {
+            dom.productsList.innerHTML = '';
+            
+            if (appState.products.length === 0) {
+                dom.productsList.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3>Nenhum produto cadastrado</h3>
+                        <p>Adicione seus produtos para começar a vender</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            appState.products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">
+                        <i class="fas fa-${getProductIcon(product.category)}"></i>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">R$ ${product.price.toFixed(2)}</div>
+                        <div class="product-stock ${product.stock <= product.minStock ? 'stock-low' : ''}">
+                            Estoque: ${product.stock} ${product.stock <= product.minStock ? '⚠️ Baixo' : ''}
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem;">
+                            Custo: R$ ${product.cost ? product.cost.toFixed(2) : '0.00'}
+                        </div>
+                        <button onclick="editProduct(${product.id})" style="margin-top: 0.5rem; padding: 8px 12px; font-size: 0.9rem;">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                `;
+                dom.productsList.appendChild(card);
+            });
+        }
 
-// Mostrar modal para editar produto
-function showEditProductModal(productId) {
-    const product = appState.products.find(p => p.id === productId);
-    if (!product) return;
-    
-    // Preencher o formulário atual com os dados do produto
-    dom.productName.value = product.name;
-    dom.productCategory.value = product.category;
-    dom.productPrice.value = product.price;
-    dom.productCost.value = product.cost || 0;
-    dom.productStock.value = product.stock;
-    
-    // Mudar o texto do botão
-    dom.addProductBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
-    dom.addProductBtn.dataset.editId = productId;
-    
-    // Rolar até o formulário
-    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-    
-    // Focar no primeiro campo
-    dom.productName.focus();
-    
-    showNotification(`Editando produto: ${product.name}`, "info");
-}
-
-// Cancelar edição
-function cancelEdit() {
-    dom.addProductBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar Produto';
-    delete dom.addProductBtn.dataset.editId;
-    resetProductForm();
-}
-
-// Resetar formulário de produto
-function resetProductForm() {
-    dom.productName.value = '';
-    dom.productCategory.value = 'bebidas';
-    dom.productPrice.value = '';
-    dom.productCost.value = '';
-    dom.productStock.value = '10';
-}
         function getProductIcon(category) {
             const icons = {
                 'bebidas': 'wine-bottle',
@@ -4701,40 +4513,26 @@ function resetProductForm() {
             dom.calculateCMVBtn.addEventListener('click', calculateCMV);
             
             // Produtos
-          // Produtos
-dom.addProductBtn.addEventListener('click', () => {
-    const name = dom.productName.value.trim();
-    const category = dom.productCategory.value;
-    const price = dom.productPrice.value;
-    const cost = dom.productCost.value;
-    const stock = dom.productStock.value;
-    
-    if (!name || !price || !stock) {
-        showNotification("Preencha todos os campos obrigatórios", "danger");
-        return;
-    }
-    
-    addProduct(name, category, price, cost, stock);
-});
-
-// Adicionar botão de cancelar edição no HTML (adicione após o botão Adicionar Produto)
-// Adicione este HTML na seção de produtos, após o botão "Adicionar Produto":
-/*
-<div style="margin-top: 1.5rem; display: flex; gap: 10px;">
-    <button id="addProductBtn">
-        <i class="fas fa-plus"></i> Adicionar Produto
-    </button>
-    <button id="cancelEditBtn" class="secondary" style="display: none;">
-        <i class="fas fa-times"></i> Cancelar Edição
-    </button>
-</div>
-*/
-
-// E no setupEventListeners():
-const cancelEditBtn = document.getElementById('cancelEditBtn');
-if (cancelEditBtn) {
-    cancelEditBtn.addEventListener('click', cancelEdit);
-}
+            dom.addProductBtn.addEventListener('click', () => {
+                const name = dom.productName.value.trim();
+                const category = dom.productCategory.value;
+                const price = dom.productPrice.value;
+                const cost = dom.productCost.value;
+                const stock = dom.productStock.value;
+                
+                if (!name || !price || !stock) {
+                    showNotification("Preencha todos os campos obrigatórios", "danger");
+                    return;
+                }
+                
+                addProduct(name, category, price, cost, stock);
+                
+                dom.productName.value = '';
+                dom.productPrice.value = '';
+                dom.productCost.value = '';
+                dom.productStock.value = '10';
+            });
+            
             // Configurações do negócio
             dom.saveBusinessInfoBtn.addEventListener('click', () => {
                 const name = dom.businessNameInput.value.trim();
