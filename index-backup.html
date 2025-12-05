@@ -3,37 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PraiaVendas | Gestão para Vendedores</title>
+    <title>PraiaVendas | Gestão Inteligente para Vendedores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         :root {
             --primary: #FF9800;
             --primary-light: #FFB74D;
             --secondary: #2196F3;
             --success: #4CAF50;
+            --success-light: #A5D6A7;
             --danger: #F44336;
             --warning: #FFC107;
+            --info: #29B6F6;
             --dark: #333333;
             --light: #FFFFFF;
             --gray: #757575;
+            --gray-light: #F5F5F5;
+            --gray-dark: #424242;
             --beach-blue: #4FC3F7;
             --beach-sand: #FFECB3;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
+            --border-radius: 16px;
         }
+        /* Estilo para botões de ação em produtos */
+.product-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.product-actions button {
+    flex: 1;
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+}
+
+/* Modal de confirmação de exclusão */
+.delete-confirm-modal .modal-content {
+    max-width: 400px;
+}
+
+.delete-warning {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
 
         [data-theme="dark"] {
             --primary: #FFB74D;
             --primary-light: #FFCC80;
             --secondary: #64B5F6;
             --success: #81C784;
+            --success-light: #388E3C;
             --danger: #E57373;
             --warning: #FFD54F;
+            --info: #4FC3F7;
             --dark: #F5F5F5;
             --light: #121212;
             --gray: #BDBDBD;
+            --gray-light: #1E1E1E;
+            --gray-dark: #BDBDBD;
             --beach-blue: #29B6F6;
             --beach-sand: #FFD54F;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -58,6 +93,26 @@
         [data-theme="dark"] body {
             background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 100%);
             color: var(--dark);
+        }
+
+        /* CORREÇÃO PARA MODO ESCURO - CAMPOS DE FORMULÁRIO */
+        input, select, textarea {
+            background-color: var(--light) !important;
+            color: var(--dark) !important;
+            border: 2px solid #E0E0E0 !important;
+        }
+
+        [data-theme="dark"] input,
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background-color: var(--gray-light) !important;
+            color: var(--dark) !important;
+            border-color: #444 !important;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary) !important;
+            outline: none !important;
         }
 
         /* Login Screen */
@@ -331,6 +386,195 @@
             color: var(--gray);
         }
 
+        /* NOVO: Sistema de Meta Diária */
+        .daily-goal-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            box-shadow: var(--card-shadow);
+        }
+
+        .daily-goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .daily-goal-header h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .daily-goal-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .goal-progress-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .goal-progress-title {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .goal-progress-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+
+        .goal-recommendation {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .goal-recommendation i {
+            color: var(--warning);
+            margin-right: 8px;
+        }
+
+        .goal-setter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .goal-setter input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .goal-setter input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .goal-setter button {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .goal-setter button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Controle de Produtos para Meta */
+        .product-control-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        [data-theme="dark"] .product-control-section {
+            background: #1E1E1E;
+        }
+
+        .product-control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .product-control-card {
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .product-control-card {
+            border-color: #444;
+        }
+
+        .product-control-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .product-control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-control-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .product-control-profit {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .product-control-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin: 0.5rem 0;
+        }
+
+        .product-control-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 0.8rem;
+        }
+
+        .product-control-actions button {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        /* Filtros */
         .filters {
             display: flex;
             gap: 10px;
@@ -387,30 +631,6 @@
             font-size: 0.9rem;
         }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #E0E0E0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: var(--transition);
-            background: #FAFAFA;
-            color: var(--dark);
-        }
-
-        [data-theme="dark"] input,
-        [data-theme="dark"] select,
-        [data-theme="dark"] textarea {
-            background: #2A2A2A;
-            border-color: #444;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            background: white;
-        }
-
         button {
             background: var(--primary);
             color: white;
@@ -445,7 +665,11 @@
             background: var(--success);
         }
 
-        /* PAGAMENTO MISTO - NOVOS ESTILOS */
+        button.info {
+            background: var(--info);
+        }
+
+        /* PAGAMENTO MISTO */
         .mixed-payment-section {
             margin-top: 1.5rem;
             border-top: 2px dashed #E0E0E0;
@@ -465,7 +689,7 @@
         }
 
         .mixed-payment-item {
-            background: #F8F9FA;
+            background: var(--gray-light);
             border-radius: 10px;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -919,6 +1143,10 @@
             .mixed-payment-select {
                 width: 100%;
             }
+            
+            .daily-goal-content {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -938,6 +1166,10 @@
                 flex-direction: column;
                 text-align: center;
                 gap: 8px;
+            }
+            
+            .product-control-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1064,6 +1296,207 @@
         .editable-change-fund input {
             flex: 1;
         }
+
+        /* NOVA ABA: METAS */
+        .goal-tracking-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        [data-theme="dark"] .goal-tracking-section {
+            background: #1E1E1E;
+        }
+
+        .goal-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .goal-metric-card {
+            background: var(--gray-light);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        [data-theme="dark"] .goal-metric-card {
+            background: #2A2A2A;
+        }
+
+        .goal-metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .goal-metric-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .goal-history {
+            margin-top: 2rem;
+        }
+
+        .goal-day-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .goal-day-card {
+            border-color: #444;
+        }
+
+        .goal-day-card:hover {
+            background: var(--gray-light);
+        }
+
+        .goal-day-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .goal-achieved {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .goal-partial {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .goal-not-achieved {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+        }
+
+        /* Indicador de progresso circular */
+        .circular-progress {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+
+        .circular-progress svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .circular-progress-circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .circular-progress-bg {
+            stroke: rgba(255, 255, 255, 0.2);
+        }
+
+        .circular-progress-fill {
+            stroke: white;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .circular-progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Melhorias visuais para tabelas */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            font-weight: normal;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -1112,6 +1545,9 @@
                         <div class="tab active" data-tab="dashboard">
                             <i class="fas fa-home"></i> Início
                         </div>
+                        <div class="tab" data-tab="goals">
+                            <i class="fas fa-bullseye"></i> Metas
+                        </div>
                         <div class="tab" data-tab="sales">
                             <i class="fas fa-shopping-cart"></i> Vendas
                         </div>
@@ -1143,6 +1579,65 @@
                     <button class="filter-btn" data-filter="week">Esta Semana</button>
                     <button class="filter-btn" data-filter="month">Este Mês</button>
                     <button class="filter-btn" data-filter="all">Todo Período</button>
+                </div>
+                
+                <!-- NOVA SEÇÃO: Meta Diária -->
+                <div class="daily-goal-section" id="dailyGoalSection">
+                    <div class="daily-goal-header">
+                        <h2><i class="fas fa-bullseye"></i> Meta de Lucro Diário</h2>
+                        <button onclick="showGoalModal()" class="secondary">
+                            <i class="fas fa-cog"></i> Configurar Meta
+                        </button>
+                    </div>
+                    
+                    <div class="daily-goal-content">
+                        <div class="goal-progress-card">
+                            <div class="goal-progress-title">Lucro Hoje</div>
+                            <div class="goal-progress-value" id="todayProfitValue">R$ 0,00</div>
+                            <div class="goal-progress-bar">
+                                <div class="goal-progress-fill" id="todayProgressFill" style="width: 0%"></div>
+                            </div>
+                            <div class="goal-progress-title">
+                                <span id="todayProgressText">0% da meta</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="tooltip-text">Percentual da sua meta diária já atingido</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-progress-card">
+                            <div class="goal-progress-title">Meta Diária</div>
+                            <div class="goal-progress-value" id="dailyGoalValue">R$ 0,00</div>
+                            <div class="circular-progress">
+                                <svg viewBox="0 0 36 36">
+                                    <path class="circular-progress-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="circular-progress-fill" id="circularProgress" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                          stroke-dasharray="100, 100" />
+                                </svg>
+                                <div class="circular-progress-text" id="circularProgressText">0%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="goal-progress-card">
+                            <div class="goal-progress-title">Falta para Meta</div>
+                            <div class="goal-progress-value" id="remainingGoalValue">R$ 0,00</div>
+                            <div class="goal-progress-title">Produto mais lucrativo:</div>
+                            <div class="goal-progress-value" id="bestProductProfit">R$ 0,00</div>
+                            <div class="goal-progress-title">
+                                <span id="unitsNeededText">0 unidades</span>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="tooltip-text">Quantas unidades do produto mais lucrativo faltam para bater a meta</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-recommendation" id="goalRecommendation">
+                        <i class="fas fa-lightbulb"></i>
+                        <span id="recommendationText">Defina sua meta diária para começar a acompanhar seu progresso!</span>
+                    </div>
                 </div>
                 
                 <div class="dashboard-summary">
@@ -1227,6 +1722,81 @@
                 </div>
             </section>
             
+            <!-- NOVA SEÇÃO: Sistema de Metas -->
+            <section id="goals" class="section">
+                <div class="goal-tracking-section">
+                    <h2><i class="fas fa-bullseye"></i> Sistema de Acompanhamento de Metas</h2>
+                    <p style="margin: 1rem 0; color: var(--gray);">
+                        <i class="fas fa-user-circle"></i> Sistema pessoal de autoavaliação e planejamento
+                    </p>
+                    
+                    <div class="goal-metrics-grid">
+                        <div class="goal-metric-card">
+                            <div class="goal-metric-label">Meta Diária Atual</div>
+                            <div class="goal-metric-value" id="currentDailyGoal">R$ 0,00</div>
+                            <button onclick="showGoalModal()" class="btn-small secondary" style="margin-top: 10px;">
+                                <i class="fas fa-edit"></i> Alterar
+                            </button>
+                        </div>
+                        
+                        <div class="goal-metric-card">
+                            <div class="goal-metric-label">Média dos Últimos 7 Dias</div>
+                            <div class="goal-metric-value" id="weeklyAverage">R$ 0,00</div>
+                            <div class="goal-metric-label" id="weeklyTrend">
+                                <i class="fas fa-minus"></i> Sem variação
+                            </div>
+                        </div>
+                        
+                        <div class="goal-metric-card">
+                            <div class="goal-metric-label">Dias no Mês</div>
+                            <div class="goal-metric-value" id="daysThisMonth">0/30</div>
+                            <div class="goal-metric-label">Meta Mensal: <span id="monthlyGoalEstimate">R$ 0,00</span></div>
+                        </div>
+                        
+                        <div class="goal-metric-card">
+                            <div class="goal-metric-label">Taxa de Sucesso</div>
+                            <div class="goal-metric-value" id="successRate">0%</div>
+                            <div class="goal-metric-label">Dias que bateu a meta</div>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-setter">
+                        <input type="number" id="newDailyGoal" placeholder="Ex: 150.00" step="0.01" min="0">
+                        <button onclick="setDailyGoal()" class="success">
+                            <i class="fas fa-check"></i> Definir Meta Diária
+                        </button>
+                    </div>
+                    
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray);">
+                        <i class="fas fa-info-circle"></i> Esta meta é para seu acompanhamento pessoal. Ninguém mais tem acesso a esses dados.
+                    </p>
+                </div>
+                
+                <!-- Controle de Produtos para Metas -->
+                <div class="product-control-section">
+                    <h3><i class="fas fa-box-open"></i> Produtos Cadastrados para Cálculo de Lucro</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray);">
+                        Cadastre seus produtos com custo e preço de venda para calcular o lucro líquido por unidade.
+                    </p>
+                    
+                    <div class="product-control-grid" id="productControlGrid">
+                        <!-- Produtos serão carregados aqui -->
+                    </div>
+                    
+                    <button onclick="showProductModal()" class="secondary" style="margin-top: 1rem;">
+                        <i class="fas fa-plus"></i> Cadastrar Novo Produto
+                    </button>
+                </div>
+                
+                <!-- Histórico de Metas -->
+                <div class="goal-tracking-section">
+                    <h3><i class="fas fa-history"></i> Histórico de Desempenho Diário</h3>
+                    <div id="goalHistoryList" class="goal-history">
+                        <!-- Histórico será carregado aqui -->
+                    </div>
+                </div>
+            </section>
+            
             <!-- Vendas COM PAGAMENTO MISTO -->
             <section id="sales" class="section">
                 <div class="sale-card">
@@ -1282,11 +1852,14 @@
                         <button id="registerSaleBtn">
                             <i class="fas fa-check"></i> Registrar Venda
                         </button>
+                        <button onclick="updateGoalDisplay()" class="secondary" style="margin-left: 10px;">
+                            <i class="fas fa-sync-alt"></i> Atualizar Meta
+                        </button>
                     </div>
                 </div>
                 
                 <div class="settings-section">
-                    <h3><i class="fas fa-history"></i> Vendas Recentes</h3>
+                    <h3><i class="fas fa-history"></i> Vendas de Hoje</h3>
                     <div id="recentSalesList">
                         <!-- Vendas recentes serão carregadas aqui -->
                     </div>
@@ -1475,12 +2048,15 @@
                         </div>
                     </div>
                     
-                    <div style="margin-top: 1.5rem;">
-                        <button id="addProductBtn">
-                            <i class="fas fa-plus"></i> Adicionar Produto
-                        </button>
-                    </div>
-                </div>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+    <button id="addProductBtn">
+        <i class="fas fa-plus"></i> Adicionar Produto
+    </button>
+    <button id="cancelEditBtn" class="secondary" style="display: none;">
+        <!--<i class="fas fa-times"></i> Cancelar Edição-->
+    </button>
+</div>
+
                 
                 <h3 style="margin: 1.5rem 0 1rem;"><i class="fas fa-boxes"></i> Meus Produtos</h3>
                 <div class="products-grid" id="productsList">
@@ -1630,6 +2206,14 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Notificações de Meta Diária</span>
+                            <label class="switch">
+                                <input type="checkbox" id="goalNotificationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 
@@ -1662,6 +2246,79 @@
         <i class="fas fa-money-bill-wave"></i>
     </div>
 
+    <!-- Modal de Configuração de Meta -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fas fa-bullseye"></i> Configurar Meta Diária</h3>
+            <p style="margin-bottom: 1rem;">Defina sua meta pessoal de lucro líquido diário:</p>
+            
+            <div class="form-group">
+                <label for="modalDailyGoal">Meta de Lucro Diário (R$)</label>
+                <input type="number" id="modalDailyGoal" min="0" step="0.01" placeholder="Ex: 150.00">
+            </div>
+            
+            <div class="form-group">
+                <label for="goalDescription">Descrição (opcional)</label>
+                <input type="text" id="goalDescription" placeholder="Ex: Meta para viagem, poupança...">
+            </div>
+            
+            <div style="background: var(--gray-light); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <h4><i class="fas fa-lightbulb"></i> Sugestões Baseadas no Histórico</h4>
+                <div id="goalSuggestions" style="margin-top: 0.5rem;">
+                    <!-- Sugestões serão carregadas aqui -->
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button onclick="hideGoalModal()" class="secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button onclick="saveDailyGoal()" class="success">
+                    <i class="fas fa-check"></i> Salvar Meta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro de Produto para Meta -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fas fa-box"></i> Cadastrar Produto para Cálculo de Lucro</h3>
+            
+            <div class="form-group">
+                <label for="modalProductName">Nome do Produto</label>
+                <input type="text" id="modalProductName" placeholder="Ex: Água de Coco 500ml">
+            </div>
+            
+            <div class="form-group">
+                <label for="modalProductCost">Custo Unitário (R$)</label>
+                <input type="number" id="modalProductCost" min="0.01" step="0.01" placeholder="Ex: 2.50">
+            </div>
+            
+            <div class="form-group">
+                <label for="modalProductPrice">Preço de Venda (R$)</label>
+                <input type="number" id="modalProductPrice" min="0.01" step="0.01" placeholder="Ex: 5.00">
+            </div>
+            
+            <div style="background: var(--success-light); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <h4><i class="fas fa-calculator"></i> Cálculo Automático</h4>
+                <div style="margin-top: 0.5rem;">
+                    <div>Lucro por unidade: <strong id="profitPerUnitCalc">R$ 0,00</strong></div>
+                    <div>Margem de lucro: <strong id="profitMarginCalc">0%</strong></div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button onclick="hideProductModal()" class="secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button onclick="saveGoalProduct()" class="success">
+                    <i class="fas fa-check"></i> Cadastrar Produto
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Cookies -->
     <div class="modal" id="cookieModal">
         <div class="modal-content">
@@ -1677,7 +2334,669 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES INICIAIS
+        // ============ SISTEMA DE METAS DIÁRIAS ============
+        
+        // Estrutura de dados para metas
+        const GOAL_DATA_KEYS = {
+            DAILY_GOAL: 'praiaVendas_dailyGoal',
+            GOAL_PRODUCTS: 'praiaVendas_goalProducts',
+            GOAL_HISTORY: 'praiaVendas_goalHistory',
+            GOAL_SETTINGS: 'praiaVendas_goalSettings'
+        };
+
+        // Estado do sistema de metas
+        let goalState = {
+            dailyGoal: 0,
+            goalDescription: '',
+            goalProducts: [],
+            goalHistory: [],
+            settings: {
+                notifications: true,
+                autoCalculate: true,
+                showRecommendations: true
+            },
+            todayProfit: 0,
+            todaySales: []
+        };
+
+        // ============ FUNÇÕES DO SISTEMA DE METAS ============
+
+        // Carregar dados das metas
+        function loadGoalData() {
+            const savedDailyGoal = localStorage.getItem(GOAL_DATA_KEYS.DAILY_GOAL);
+            if (savedDailyGoal) goalState.dailyGoal = parseFloat(savedDailyGoal);
+            
+            const savedGoalProducts = localStorage.getItem(GOAL_DATA_KEYS.GOAL_PRODUCTS);
+            if (savedGoalProducts) goalState.goalProducts = JSON.parse(savedGoalProducts);
+            
+            const savedGoalHistory = localStorage.getItem(GOAL_DATA_KEYS.GOAL_HISTORY);
+            if (savedGoalHistory) goalState.goalHistory = JSON.parse(savedGoalHistory);
+            
+            const savedGoalSettings = localStorage.getItem(GOAL_DATA_KEYS.GOAL_SETTINGS);
+            if (savedGoalSettings) goalState.settings = JSON.parse(savedGoalSettings);
+        }
+
+        // Salvar dados das metas
+        function saveGoalData() {
+            localStorage.setItem(GOAL_DATA_KEYS.DAILY_GOAL, goalState.dailyGoal.toString());
+            localStorage.setItem(GOAL_DATA_KEYS.GOAL_PRODUCTS, JSON.stringify(goalState.goalProducts));
+            localStorage.setItem(GOAL_DATA_KEYS.GOAL_HISTORY, JSON.stringify(goalState.goalHistory));
+            localStorage.setItem(GOAL_DATA_KEYS.GOAL_SETTINGS, JSON.stringify(goalState.settings));
+        }
+
+        // Calcular lucro de hoje
+        function calculateTodayProfit() {
+            const today = new Date().toISOString().split('T')[0];
+            goalState.todayProfit = 0;
+            goalState.todaySales = [];
+            
+            // Filtrar vendas de hoje
+            const todaySales = appState.sales.filter(sale => {
+                const saleDate = new Date(sale.date).toISOString().split('T')[0];
+                return saleDate === today;
+            });
+            
+            // Calcular lucro líquido de cada venda
+            todaySales.forEach(sale => {
+                const product = goalState.goalProducts.find(p => p.name === sale.productName);
+                if (product) {
+                    const profit = (product.profitPerUnit * sale.quantity) - sale.machineFee;
+                    goalState.todayProfit += profit;
+                    
+                    goalState.todaySales.push({
+                        ...sale,
+                        profit: profit,
+                        productProfitPerUnit: product.profitPerUnit
+                    });
+                } else {
+                    // Se não encontrar produto cadastrado, estima 50% de lucro
+                    const estimatedProfit = (sale.total * 0.5) - sale.machineFee;
+                    goalState.todayProfit += estimatedProfit;
+                }
+            });
+            
+            // Subtrair custos de hoje
+            const todayCosts = appState.costs.filter(cost => {
+                const costDate = new Date(cost.date).toISOString().split('T')[0];
+                return costDate === today && cost.category !== 'salary';
+            });
+            
+            todayCosts.forEach(cost => {
+                goalState.todayProfit -= cost.value;
+            });
+            
+            return goalState.todayProfit;
+        }
+
+        // Atualizar display da meta
+        function updateGoalDisplay() {
+            const todayProfit = calculateTodayProfit();
+            const dailyGoal = goalState.dailyGoal;
+            
+            // Atualizar valores na tela
+            document.getElementById('todayProfitValue').textContent = `R$ ${todayProfit.toFixed(2)}`;
+            document.getElementById('dailyGoalValue').textContent = `R$ ${dailyGoal.toFixed(2)}`;
+            document.getElementById('currentDailyGoal').textContent = `R$ ${dailyGoal.toFixed(2)}`;
+            
+            // Calcular progresso
+            let progress = 0;
+            let remaining = dailyGoal;
+            
+            if (dailyGoal > 0) {
+                progress = Math.min((todayProfit / dailyGoal) * 100, 100);
+                remaining = Math.max(dailyGoal - todayProfit, 0);
+            }
+            
+            document.getElementById('remainingGoalValue').textContent = `R$ ${remaining.toFixed(2)}`;
+            document.getElementById('todayProgressText').textContent = `${progress.toFixed(1)}% da meta`;
+            document.getElementById('circularProgressText').textContent = `${progress.toFixed(0)}%`;
+            
+            // Atualizar barras de progresso
+            document.getElementById('todayProgressFill').style.width = `${progress}%`;
+            
+            const circumference = 2 * Math.PI * 15.9155;
+            const offset = circumference - (progress / 100) * circumference;
+            document.getElementById('circularProgress').style.strokeDashoffset = offset;
+            
+            // Calcular e mostrar produto mais lucrativo
+            updateBestProductInfo();
+            
+            // Atualizar recomendação
+            updateGoalRecommendation(todayProfit, dailyGoal, progress);
+            
+            // Atualizar métricas adicionais
+            updateGoalMetrics();
+            
+            // Atualizar histórico
+            updateGoalHistory();
+            
+            // Atualizar produtos cadastrados
+            updateGoalProductsDisplay();
+        }
+
+        // Atualizar informações do produto mais lucrativo
+        function updateBestProductInfo() {
+            if (goalState.goalProducts.length === 0) {
+                document.getElementById('bestProductProfit').textContent = 'R$ 0,00';
+                document.getElementById('unitsNeededText').textContent = 'Cadastre produtos';
+                return;
+            }
+            
+            // Encontrar produto com maior lucro por unidade
+            const bestProduct = goalState.goalProducts.reduce((prev, current) => 
+                (prev.profitPerUnit > current.profitPerUnit) ? prev : current
+            );
+            
+            document.getElementById('bestProductProfit').textContent = `R$ ${bestProduct.profitPerUnit.toFixed(2)}`;
+            
+            // Calcular unidades necessárias para bater a meta
+            const remaining = Math.max(goalState.dailyGoal - goalState.todayProfit, 0);
+            const unitsNeeded = Math.ceil(remaining / bestProduct.profitPerUnit);
+            
+            document.getElementById('unitsNeededText').textContent = `${unitsNeeded} unidades`;
+        }
+
+        // Atualizar recomendação baseada no progresso
+        function updateGoalRecommendation(todayProfit, dailyGoal, progress) {
+            const recommendationEl = document.getElementById('recommendationText');
+            let recommendation = '';
+            
+            if (dailyGoal === 0) {
+                recommendation = 'Defina sua meta diária para começar a acompanhar seu progresso!';
+            } else if (progress >= 100) {
+                recommendation = '🎉 Parabéns! Você já bateu sua meta hoje!';
+            } else if (progress >= 75) {
+                recommendation = 'Ótimo trabalho! Você está quase lá!';
+            } else if (progress >= 50) {
+                recommendation = 'Bom progresso! Continue assim!';
+            } else if (progress >= 25) {
+                recommendation = 'Você está no caminho certo!';
+            } else if (todayProfit > 0) {
+                recommendation = 'Começou bem! Mantenha o ritmo!';
+            } else {
+                recommendation = 'Hora de começar! Venda seu primeiro produto hoje!';
+            }
+            
+            // Adicionar dica de produto se houver produtos cadastrados
+            if (goalState.goalProducts.length > 0 && progress < 100) {
+                const bestProduct = goalState.goalProducts.reduce((prev, current) => 
+                    (prev.profitPerUnit > current.profitPerUnit) ? prev : current
+                );
+                
+                const remaining = dailyGoal - todayProfit;
+                const unitsNeeded = Math.ceil(remaining / bestProduct.profitPerUnit);
+                
+                recommendation += ` Foque em vender ${unitsNeeded} unidades de ${bestProduct.name} para bater a meta!`;
+            }
+            
+            recommendationEl.textContent = recommendation;
+        }
+
+        // Atualizar métricas das metas
+        function updateGoalMetrics() {
+            // Calcular média dos últimos 7 dias
+            const last7Days = getLastNDays(7);
+            const weeklyAverage = last7Days.reduce((sum, day) => sum + day.profit, 0) / 7;
+            document.getElementById('weeklyAverage').textContent = `R$ ${weeklyAverage.toFixed(2)}`;
+            
+            // Calcular tendência
+            const previousWeek = getLastNDays(14).slice(0, 7);
+            const previousAverage = previousWeek.reduce((sum, day) => sum + day.profit, 0) / 7;
+            const trend = weeklyAverage - previousAverage;
+            
+            const trendEl = document.getElementById('weeklyTrend');
+            if (trend > 0) {
+                trendEl.innerHTML = `<i class="fas fa-arrow-up" style="color: var(--success);"></i> +${trend.toFixed(2)}`;
+            } else if (trend < 0) {
+                trendEl.innerHTML = `<i class="fas fa-arrow-down" style="color: var(--danger);"></i> ${trend.toFixed(2)}`;
+            } else {
+                trendEl.innerHTML = `<i class="fas fa-minus"></i> Sem variação`;
+            }
+            
+            // Dias no mês
+            const now = new Date();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const today = now.getDate();
+            document.getElementById('daysThisMonth').textContent = `${today}/${daysInMonth}`;
+            
+            // Meta mensal estimada
+            const monthlyEstimate = goalState.dailyGoal * daysInMonth;
+            document.getElementById('monthlyGoalEstimate').textContent = `R$ ${monthlyEstimate.toFixed(2)}`;
+            
+            // Taxa de sucesso
+            const successDays = goalState.goalHistory.filter(day => day.profit >= day.goal && day.goal > 0).length;
+            const totalDays = goalState.goalHistory.filter(day => day.goal > 0).length;
+            const successRate = totalDays > 0 ? (successDays / totalDays) * 100 : 0;
+            document.getElementById('successRate').textContent = `${successRate.toFixed(0)}%`;
+        }
+
+        // Obter dados dos últimos N dias
+        function getLastNDays(n) {
+            const days = [];
+            const today = new Date();
+            
+            for (let i = 0; i < n; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // Buscar no histórico
+                const historyDay = goalState.goalHistory.find(d => d.date === dateStr);
+                
+                if (historyDay) {
+                    days.push(historyDay);
+                } else {
+                    // Calcular lucro para esse dia
+                    const dayProfit = calculateDayProfit(dateStr);
+                    days.push({
+                        date: dateStr,
+                        profit: dayProfit,
+                        goal: 0
+                    });
+                }
+            }
+            
+            return days;
+        }
+
+        // Calcular lucro de um dia específico
+        function calculateDayProfit(dateStr) {
+            let profit = 0;
+            
+            // Vendas do dia
+            const daySales = appState.sales.filter(sale => {
+                const saleDate = new Date(sale.date).toISOString().split('T')[0];
+                return saleDate === dateStr;
+            });
+            
+            daySales.forEach(sale => {
+                const product = goalState.goalProducts.find(p => p.name === sale.productName);
+                if (product) {
+                    profit += (product.profitPerUnit * sale.quantity) - sale.machineFee;
+                } else {
+                    profit += (sale.total * 0.5) - sale.machineFee;
+                }
+            });
+            
+            // Custos do dia
+            const dayCosts = appState.costs.filter(cost => {
+                const costDate = new Date(cost.date).toISOString().split('T')[0];
+                return costDate === dateStr && cost.category !== 'salary';
+            });
+            
+            dayCosts.forEach(cost => {
+                profit -= cost.value;
+            });
+            
+            return profit;
+        }
+
+        // Atualizar histórico de metas
+        function updateGoalHistory() {
+            const historyList = document.getElementById('goalHistoryList');
+            historyList.innerHTML = '';
+            
+            // Mostrar apenas últimos 14 dias
+            const last14Days = getLastNDays(14);
+            
+            if (last14Days.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Nenhum histórico disponível</p>
+                        <p style="font-size: 0.9rem;">Seu histórico será gerado automaticamente</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            last14Days.forEach(day => {
+                const dayDate = new Date(day.date);
+                const formattedDate = dayDate.toLocaleDateString('pt-BR', { 
+                    weekday: 'short',
+                    day: '2-digit',
+                    month: 'short'
+                });
+                
+                const goal = day.goal || goalState.dailyGoal;
+                const progress = goal > 0 ? (day.profit / goal) * 100 : 0;
+                
+                let status = 'goal-not-achieved';
+                let statusText = 'Não atingida';
+                
+                if (goal > 0) {
+                    if (day.profit >= goal) {
+                        status = 'goal-achieved';
+                        statusText = 'Meta atingida';
+                    } else if (progress >= 50) {
+                        status = 'goal-partial';
+                        statusText = 'Parcial';
+                    }
+                }
+                
+                const dayCard = document.createElement('div');
+                dayCard.className = 'goal-day-card';
+                dayCard.innerHTML = `
+                    <div>
+                        <div style="font-weight: 600;">${formattedDate}</div>
+                        <div style="font-size: 0.85rem; color: var(--gray);">
+                            Lucro: R$ ${day.profit.toFixed(2)}
+                            ${goal > 0 ? ` | Meta: R$ ${goal.toFixed(2)}` : ''}
+                        </div>
+                    </div>
+                    <div class="goal-day-status ${status}">${statusText}</div>
+                `;
+                
+                historyList.appendChild(dayCard);
+            });
+        }
+
+        // Atualizar display dos produtos cadastrados
+        function updateGoalProductsDisplay() {
+            const productGrid = document.getElementById('productControlGrid');
+            productGrid.innerHTML = '';
+            
+            if (goalState.goalProducts.length === 0) {
+                productGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
+                        <h3>Nenhum produto cadastrado</h3>
+                        <p>Cadastre seus produtos para calcular o lucro exato por venda</p>
+                        <button onclick="showProductModal()" class="secondary" style="margin-top: 1rem;">
+                            <i class="fas fa-plus"></i> Cadastrar Primeiro Produto
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            goalState.goalProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-control-card';
+                productCard.innerHTML = `
+                    <div class="product-control-header">
+                        <div class="product-control-name">${product.name}</div>
+                        <div class="product-control-profit">+R$ ${product.profitPerUnit.toFixed(2)}</div>
+                    </div>
+                    <div class="product-control-stats">
+                        <div>Custo: R$ ${product.cost.toFixed(2)}</div>
+                        <div>Venda: R$ ${product.price.toFixed(2)}</div>
+                        <div>Margem: ${product.margin.toFixed(1)}%</div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--gray);">
+                        <i class="fas fa-chart-line"></i> Contribuição hoje: R$ ${(product.profitPerUnit * getTodaySalesCount(product.name)).toFixed(2)}
+                    </div>
+                    <div class="product-control-actions">
+                        <button onclick="editGoalProduct(${product.id})" class="btn-small info">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button onclick="deleteGoalProduct(${product.id})" class="btn-small danger">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Obter contagem de vendas de hoje para um produto
+        function getTodaySalesCount(productName) {
+            return goalState.todaySales.filter(sale => sale.productName === productName)
+                .reduce((sum, sale) => sum + sale.quantity, 0);
+        }
+
+        // Definir meta diária
+        function setDailyGoal() {
+            const input = document.getElementById('newDailyGoal');
+            const value = parseFloat(input.value);
+            
+            if (!value || value <= 0) {
+                showNotification("Digite um valor válido para a meta", "danger");
+                return;
+            }
+            
+            goalState.dailyGoal = value;
+            saveGoalData();
+            updateGoalDisplay();
+            
+            input.value = '';
+            showNotification(`Meta diária definida em R$ ${value.toFixed(2)}`, "success");
+            
+            // Registrar no histórico
+            addGoalToHistory();
+        }
+
+        // Adicionar meta ao histórico
+        function addGoalToHistory() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayProfit = calculateTodayProfit();
+            
+            // Verificar se já existe entrada para hoje
+            const existingIndex = goalState.goalHistory.findIndex(d => d.date === today);
+            
+            if (existingIndex !== -1) {
+                goalState.goalHistory[existingIndex].goal = goalState.dailyGoal;
+            } else {
+                goalState.goalHistory.unshift({
+                    date: today,
+                    profit: todayProfit,
+                    goal: goalState.dailyGoal
+                });
+            }
+            
+            // Manter apenas últimos 90 dias no histórico
+            goalState.goalHistory = goalState.goalHistory.slice(0, 90);
+            saveGoalData();
+        }
+
+        // Mostrar modal de configuração de meta
+        function showGoalModal() {
+            document.getElementById('modalDailyGoal').value = goalState.dailyGoal;
+            document.getElementById('goalDescription').value = goalState.goalDescription;
+            
+            // Gerar sugestões
+            generateGoalSuggestions();
+            
+            document.getElementById('goalModal').classList.add('show');
+        }
+
+        // Ocultar modal de configuração de meta
+        function hideGoalModal() {
+            document.getElementById('goalModal').classList.remove('show');
+        }
+
+        // Salvar meta do modal
+        function saveDailyGoal() {
+            const value = parseFloat(document.getElementById('modalDailyGoal').value);
+            const description = document.getElementById('goalDescription').value;
+            
+            if (!value || value <= 0) {
+                showNotification("Digite um valor válido para a meta", "danger");
+                return;
+            }
+            
+            goalState.dailyGoal = value;
+            goalState.goalDescription = description;
+            saveGoalData();
+            updateGoalDisplay();
+            
+            hideGoalModal();
+            showNotification(`Meta diária salva: R$ ${value.toFixed(2)}`, "success");
+            
+            // Registrar no histórico
+            addGoalToHistory();
+        }
+
+        // Gerar sugestões de meta
+        function generateGoalSuggestions() {
+            const suggestionsEl = document.getElementById('goalSuggestions');
+            suggestionsEl.innerHTML = '';
+            
+            // Calcular média dos últimos 7 dias
+            const last7Days = getLastNDays(7);
+            const weeklyAverage = last7Days.reduce((sum, day) => sum + day.profit, 0) / 7;
+            
+            // Calcular melhor dia
+            const bestDay = last7Days.reduce((prev, current) => 
+                (prev.profit > current.profit) ? prev : current
+            );
+            
+            const suggestions = [
+                { value: weeklyAverage * 1.1, label: `10% acima da média (R$ ${(weeklyAverage * 1.1).toFixed(2)})` },
+                { value: weeklyAverage * 1.25, label: `25% acima da média (R$ ${(weeklyAverage * 1.25).toFixed(2)})` },
+                { value: bestDay.profit, label: `Igual ao melhor dia (R$ ${bestDay.profit.toFixed(2)})` },
+                { value: 150, label: 'Meta comum (R$ 150,00)' },
+                { value: 250, label: 'Meta desafio (R$ 250,00)' }
+            ];
+            
+            suggestions.forEach(suggestion => {
+                const button = document.createElement('button');
+                button.className = 'btn-small secondary';
+                button.style.margin = '0 5px 5px 0';
+                button.innerHTML = suggestion.label;
+                button.onclick = () => {
+                    document.getElementById('modalDailyGoal').value = suggestion.value.toFixed(2);
+                };
+                suggestionsEl.appendChild(button);
+            });
+        }
+
+        // Mostrar modal de produto para meta
+        function showProductModal(editId = null) {
+            const modal = document.getElementById('productModal');
+            const title = modal.querySelector('.modal-title');
+            const saveButton = modal.querySelector('.modal-actions .success');
+            
+            if (editId !== null) {
+                // Modo edição
+                const product = goalState.goalProducts.find(p => p.id === editId);
+                if (product) {
+                    document.getElementById('modalProductName').value = product.name;
+                    document.getElementById('modalProductCost').value = product.cost;
+                    document.getElementById('modalProductPrice').value = product.price;
+                    title.innerHTML = `<i class="fas fa-edit"></i> Editar Produto`;
+                    saveButton.innerHTML = `<i class="fas fa-save"></i> Salvar Alterações`;
+                    saveButton.dataset.editId = editId;
+                }
+            } else {
+                // Modo criação
+                document.getElementById('modalProductName').value = '';
+                document.getElementById('modalProductCost').value = '';
+                document.getElementById('modalProductPrice').value = '';
+                title.innerHTML = `<i class="fas fa-box"></i> Cadastrar Produto para Cálculo de Lucro`;
+                saveButton.innerHTML = `<i class="fas fa-check"></i> Cadastrar Produto`;
+                delete saveButton.dataset.editId;
+            }
+            
+            // Calcular lucro automaticamente
+            updateProfitCalculation();
+            
+            modal.classList.add('show');
+        }
+
+        // Ocultar modal de produto
+        function hideProductModal() {
+            document.getElementById('productModal').classList.remove('show');
+        }
+
+        // Atualizar cálculo de lucro no modal
+        function updateProfitCalculation() {
+            const cost = parseFloat(document.getElementById('modalProductCost').value) || 0;
+            const price = parseFloat(document.getElementById('modalProductPrice').value) || 0;
+            
+            const profit = price - cost;
+            const margin = price > 0 ? (profit / price) * 100 : 0;
+            
+            document.getElementById('profitPerUnitCalc').textContent = `R$ ${profit.toFixed(2)}`;
+            document.getElementById('profitMarginCalc').textContent = `${margin.toFixed(1)}%`;
+        }
+
+        // Salvar produto para meta
+        function saveGoalProduct() {
+            const name = document.getElementById('modalProductName').value.trim();
+            const cost = parseFloat(document.getElementById('modalProductCost').value);
+            const price = parseFloat(document.getElementById('modalProductPrice').value);
+            const saveButton = document.querySelector('#productModal .modal-actions .success');
+            const editId = saveButton.dataset.editId;
+            
+            // Validações
+            if (!name) {
+                showNotification("Digite o nome do produto", "danger");
+                return;
+            }
+            
+            if (!cost || cost <= 0) {
+                showNotification("Digite um custo válido", "danger");
+                return;
+            }
+            
+            if (!price || price <= 0) {
+                showNotification("Digite um preço de venda válido", "danger");
+                return;
+            }
+            
+            if (price <= cost) {
+                showNotification("O preço de venda deve ser maior que o custo", "danger");
+                return;
+            }
+            
+            const profit = price - cost;
+            const margin = (profit / price) * 100;
+            
+            if (editId) {
+                // Editar produto existente
+                const productIndex = goalState.goalProducts.findIndex(p => p.id === parseInt(editId));
+                if (productIndex !== -1) {
+                    goalState.goalProducts[productIndex] = {
+                        id: parseInt(editId),
+                        name,
+                        cost,
+                        price,
+                        profitPerUnit: profit,
+                        margin,
+                        updatedAt: new Date().toISOString()
+                    };
+                }
+            } else {
+                // Adicionar novo produto
+                const newProduct = {
+                    id: Date.now(),
+                    name,
+                    cost,
+                    price,
+                    profitPerUnit: profit,
+                    margin,
+                    createdAt: new Date().toISOString()
+                };
+                goalState.goalProducts.push(newProduct);
+            }
+            
+            saveGoalData();
+            updateGoalProductsDisplay();
+            updateGoalDisplay();
+            
+            hideProductModal();
+            showNotification(`Produto "${name}" salvo com sucesso!`, "success");
+        }
+
+        // Editar produto para meta
+        function editGoalProduct(productId) {
+            showProductModal(productId);
+        }
+
+        // Excluir produto para meta
+        function deleteGoalProduct(productId) {
+            if (confirm("Tem certeza que deseja excluir este produto? Isso afetará o cálculo de lucro.")) {
+                goalState.goalProducts = goalState.goalProducts.filter(p => p.id !== productId);
+                saveGoalData();
+                updateGoalProductsDisplay();
+                updateGoalDisplay();
+                showNotification("Produto excluído com sucesso!", "success");
+            }
+        }
+
+        // ============ CONFIGURAÇÕES INICIAIS DO APP ============
         const APP_NAME = "PraiaVendas";
         const DATA_KEYS = {
             USERS: 'praiaVendas_users',
@@ -1723,9 +3042,10 @@
                 stockNotifications: true,
                 animations: true,
                 currentFilter: 'today',
-                machineFeePercentage: 3.99
+                machineFeePercentage: 3.99,
+                goalNotifications: true
             },
-            users: [], // Será carregado do arquivo JSON externo
+            users: [],
             currentSection: 'dashboard'
         };
 
@@ -1841,6 +3161,7 @@
             saleSoundsToggle: document.getElementById('saleSoundsToggle'),
             stockNotificationsToggle: document.getElementById('stockNotificationsToggle'),
             animationsToggle: document.getElementById('animationsToggle'),
+            goalNotificationsToggle: document.getElementById('goalNotificationsToggle'),
             backupDataBtn: document.getElementById('backupDataBtn'),
             restoreDataBtn: document.getElementById('restoreDataBtn'),
             resetDataBtn: document.getElementById('resetDataBtn'),
@@ -2029,222 +3350,14 @@
 
         // ============ FUNÇÕES PRINCIPAIS DO APP ============
 
-        // Carregar usuários do arquivo JSON externo
-        async function loadUsersFromJSON() {
-            try {
-                const response = await fetch('usuarios.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    appState.users = data.usuarios;
-                    localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
-                } else {
-                    throw new Error('Arquivo JSON não encontrado');
-                }
-            } catch (error) {
-                console.error("Erro ao carregar usuários:", error);
-                // Fallback para o JSON que você forneceu
-                appState.users = [
-                    {
-                        id: 1,
-                        username: "admin",
-                        password: "admin123",
-                        nome: "Administrador",
-                        role: "admin",
-                        ativo: true,
-                        bloqueado: false,
-                        data_criacao: "2024-01-01",
-                        ultimo_acesso: null,
-                        mensagem_acesso: "Bem-vindo ao sistema de gestão!"
-                    },
-                    {
-                        id: 2,
-                        username: "guilhermmkt",
-                        password: "guilhermmkt123",
-                        nome: "Gui Castilho",
-                        role: "vendedor",
-                        ativo: true,
-                        bloqueado: false,
-                        data_criacao: "2025-12-03",
-                        ultimo_acesso: null,
-                        mensagem_acesso: "Acesso liberado para vendas"
-                    },
-                    {
-                        id: 3,
-                        username: "sidney",
-                        password: "sidney12345",
-                        nome: "Sidney",
-                        role: "vendedor",
-                        ativo: true,
-                        bloqueado: false,
-                        data_criacao: "2025-12-03",
-                        ultimo_acesso: null,
-                        mensagem_acesso: "Acesso liberado para vendas"
-                    },
-                    {
-                        id: 4,
-                        username: "teste",
-                        password: "teste123456789",
-                        nome: "Usuário Teste",
-                        role: "vendedor",
-                        ativo: true,
-                        bloqueado: true,
-                        data_criacao: "2024-02-10",
-                        ultimo_acesso: null,
-                        mensagem_acesso: "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
-                    }
-                ];
-                localStorage.setItem(DATA_KEYS.USERS, JSON.stringify(appState.users));
-            }
-        }
-
-        // Registrar venda com pagamento misto
-        function registerMixedPaymentSale() {
-            const productId = parseInt(dom.productSelect.value);
-            const quantity = parseInt(dom.quantityInput.value) || 1;
-            const totalSale = parseFloat(dom.saleTotal.value) || 0;
-
-            // Validações
-            if (!productId) {
-                showNotification("Selecione um produto", "danger");
-                return false;
-            }
-
-            if (quantity <= 0) {
-                showNotification("Quantidade inválida", "danger");
-                return false;
-            }
-
-            if (totalSale <= 0) {
-                showNotification("Valor da venda inválido", "danger");
-                return false;
-            }
-
-            if (mixedPaymentMethods.length === 0) {
-                showNotification("Adicione pelo menos uma forma de pagamento", "danger");
-                return false;
-            }
-
-            const product = appState.products.find(p => p.id === productId);
-            if (!product) return false;
-
-            if (product.stock < quantity) {
-                showNotification(`Estoque insuficiente de ${product.name}`, "danger");
-                return false;
-            }
-
-            // Calcular total pago
-            let totalPaid = 0;
-            mixedPaymentMethods.forEach(item => {
-                totalPaid += item.amount;
-            });
-
-            const remaining = totalSale - totalPaid;
-            if (remaining > 0) {
-                showNotification(`Falta R$ ${remaining.toFixed(2)} para completar o pagamento`, "warning");
-                return false;
-            }
-
-            // Registrar uma venda principal
-            const mainSale = {
-                id: Date.now(),
-                productId: productId,
-                productName: product.name,
-                quantity: quantity,
-                price: product.price,
-                total: totalSale,
-                paymentMethod: "Pagamento Misto",
-                paymentMethodId: null,
-                machineFee: 0, // Será calculado abaixo
-                date: new Date().toISOString(),
-                isMixedPayment: true,
-                mixedPaymentDetails: []
-            };
-
-            // Calcular taxas e adicionar detalhes
-            let totalMachineFee = 0;
-            mixedPaymentMethods.forEach(item => {
-                if (item.amount > 0) {
-                    const paymentMethod = appState.paymentMethods.find(p => p.id === item.methodId);
-                    if (paymentMethod) {
-                        const machineFee = paymentMethod.fee > 0 ? (item.amount * paymentMethod.fee / 100) : 0;
-                        totalMachineFee += machineFee;
-                        
-                        // Adicionar ao detalhe da venda mista
-                        mainSale.mixedPaymentDetails.push({
-                            methodId: paymentMethod.id,
-                            methodName: paymentMethod.name,
-                            amount: item.amount,
-                            fee: machineFee
-                        });
-                        
-                        // Atualizar total da forma de pagamento
-                        paymentMethod.total += item.amount;
-                    }
-                }
-            });
-
-            // Atualizar taxa da maquininha na venda principal
-            mainSale.machineFee = totalMachineFee;
-            
-            // Adicionar venda ao histórico
-            appState.sales.push(mainSale);
-
-            // Atualizar estoque
-            updateProductStock(productId, quantity);
-            
-            saveAppData();
-            
-            // Efeitos visuais e sonoros
-            if (appState.settings.animations) {
-                playSaleAnimation();
-            }
-            
-            if (appState.settings.saleSounds) {
-                playSaleSound();
-            }
-            
-            // Atualizar dashboard
-            updateDashboard();
-            
-            // Resetar formulário
-            resetSaleForm();
-            
-            // Mostrar resumo da venda
-            let summary = `Venda registrada: ${product.name} x${quantity}<br>`;
-            summary += `Total: R$ ${totalSale.toFixed(2)}<br>`;
-            summary += `Formas de pagamento:<br>`;
-            mixedPaymentMethods.forEach(item => {
-                if (item.amount > 0) {
-                    summary += `- ${item.methodName}: R$ ${item.amount.toFixed(2)}<br>`;
-                }
-            });
-            
-            showNotification(summary, "success");
-            return true;
-        }
-
-        // Resetar formulário de venda
-        function resetSaleForm() {
-            dom.productSelect.value = '';
-            dom.quantityInput.value = '1';
-            dom.priceInput.value = '';
-            dom.saleTotal.value = '0.00';
-            mixedPaymentMethods = [];
-            updateMixedPaymentDisplay();
-        }
-
-        // ============ FUNÇÕES RESTANTES DO SISTEMA ============
-
         // Inicialização
         async function initApp() {
-            // Carregar usuários do JSON externo
-            await loadUsersFromJSON();
+            // Carregar dados
+            loadAppData();
+            loadGoalData();
             
             // Verificar consentimento de cookies
             checkCookieConsent();
-            
-            // Carregar dados salvos
-            loadAppData();
             
             // Configurar eventos
             setupEventListeners();
@@ -2255,30 +3368,31 @@
             loadPaymentMethods();
             loadCosts();
             updateDashboard();
+            updateGoalDisplay();
             setupCharts();
             
             // Verificar se há sessão ativa
             checkSession();
+            
+            // Configurar eventos para cálculo automático de lucro
+            setupGoalCalculationEvents();
+            // Funções globais para produtos
+window.showEditProductModal = showEditProductModal;
+window.confirmDeleteProduct = confirmDeleteProduct;
+window.deleteProduct = deleteProduct;
+window.hideDeleteConfirmModal = hideDeleteConfirmModal;
+window.cancelEdit = cancelEdit;
         }
 
-        // Verificar sessão
-        function checkSession() {
-            const session = localStorage.getItem(DATA_KEYS.SESSION);
-            if (session) {
-                const sessionData = JSON.parse(session);
-                if (sessionData.expires > Date.now()) {
-                    appState.currentUser = appState.users.find(u => u.username === sessionData.username);
-                    if (appState.currentUser) {
-                        showMainApp();
-                    } else {
-                        showLogin();
-                    }
-                } else {
-                    localStorage.removeItem(DATA_KEYS.SESSION);
-                    showLogin();
-                }
-            } else {
-                showLogin();
+        // Configurar eventos para cálculo automático de lucro
+        function setupGoalCalculationEvents() {
+            // Atualizar cálculo de lucro no modal de produto
+            const costInput = document.getElementById('modalProductCost');
+            const priceInput = document.getElementById('modalProductPrice');
+            
+            if (costInput) {
+                costInput.addEventListener('input', updateProfitCalculation);
+                priceInput.addEventListener('input', updateProfitCalculation);
             }
         }
 
@@ -2314,6 +3428,58 @@
             
             const savedSettings = localStorage.getItem(DATA_KEYS.SETTINGS);
             if (savedSettings) appState.settings = JSON.parse(savedSettings);
+            
+            // Carregar usuários padrão
+            appState.users = [
+                {
+                    id: 1,
+                    username: "admin",
+                    password: "admin123",
+                    nome: "Administrador",
+                    role: "admin",
+                    ativo: true,
+                    bloqueado: false,
+                    data_criacao: "2024-01-01",
+                    ultimo_acesso: null,
+                    mensagem_acesso: "Bem-vindo ao sistema de gestão!"
+                },
+                {
+                    id: 2,
+                    username: "guilhermmkt",
+                    password: "guilhermmkt123",
+                    nome: "Gui Castilho",
+                    role: "vendedor",
+                    ativo: true,
+                    bloqueado: false,
+                    data_criacao: "2025-12-03",
+                    ultimo_acesso: null,
+                    mensagem_acesso: "Acesso liberado para vendas"
+                },
+                {
+                    id: 3,
+                    username: "sidney",
+                    password: "sidney12345",
+                    nome: "Sidney",
+                    role: "vendedor",
+                    ativo: true,
+                    bloqueado: false,
+                    data_criacao: "2025-12-03",
+                    ultimo_acesso: null,
+                    mensagem_acesso: "Acesso liberado para vendas"
+                },
+                {
+                    id: 4,
+                    username: "teste",
+                    password: "teste123456789",
+                    nome: "Usuário Teste",
+                    role: "vendedor",
+                    ativo: true,
+                    bloqueado: true,
+                    data_criacao: "2024-02-10",
+                    ultimo_acesso: null,
+                    mensagem_acesso: "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
+                }
+            ];
             
             updateLastAccess();
         }
@@ -2453,38 +3619,201 @@
             dom.mainApp.style.display = 'block';
         }
 
-        // Produtos
-        function loadProducts() {
-            dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
-            
-            appState.products.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = `${product.name} - R$ ${product.price.toFixed(2)}`;
-                option.dataset.price = product.price;
-                option.dataset.cost = product.cost || 0;
-                dom.productSelect.appendChild(option);
-            });
-            
-            updateProductsGrid();
+        // Verificar sessão
+        function checkSession() {
+            const session = localStorage.getItem(DATA_KEYS.SESSION);
+            if (session) {
+                const sessionData = JSON.parse(session);
+                if (sessionData.expires > Date.now()) {
+                    appState.currentUser = appState.users.find(u => u.username === sessionData.username);
+                    if (appState.currentUser) {
+                        showMainApp();
+                    } else {
+                        showLogin();
+                    }
+                } else {
+                    localStorage.removeItem(DATA_KEYS.SESSION);
+                    showLogin();
+                }
+            } else {
+                showLogin();
+            }
         }
 
+        // Produtos
+     function loadProducts() {
+    dom.productSelect.innerHTML = '<option value="">Selecione um produto</option>';
+    
+    appState.products.forEach(product => {
+        const option = document.createElement('option');
+        option.value = product.id;
+        option.textContent = `${product.name} - R$ ${product.price.toFixed(2)}`;
+        option.dataset.price = product.price;
+        option.dataset.cost = product.cost || 0;
+        dom.productSelect.appendChild(option);
+    });
+    
+    updateProductsGrid();
+    
+    // Mostrar botão de cancelar se estiver editando
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (cancelEditBtn) {
+        if (dom.addProductBtn.dataset.editId) {
+            cancelEditBtn.style.display = 'inline-flex';
+        } else {
+            cancelEditBtn.style.display = 'none';
+        }
+    }
+}
         function addProduct(name, category, price, cost, stock) {
-            const newProduct = {
-                id: Date.now(),
+    const editId = dom.addProductBtn.dataset.editId;
+    
+    if (editId) {
+        // Modo edição
+        const productIndex = appState.products.findIndex(p => p.id === parseInt(editId));
+        if (productIndex !== -1) {
+            appState.products[productIndex] = {
+                ...appState.products[productIndex],
                 name: name,
                 category: category,
                 price: parseFloat(price),
                 cost: parseFloat(cost) || 0,
                 stock: parseInt(stock),
-                minStock: 5,
-                createdAt: new Date().toISOString()
+                updatedAt: new Date().toISOString()
             };
             
-            appState.products.push(newProduct);
             saveAppData();
             loadProducts();
-            showNotification(`Produto "${name}" adicionado com sucesso!`, "success");
+            cancelEdit();
+            showNotification(`Produto "${name}" atualizado com sucesso!`, "success");
+            
+            // Sincronizar com produtos de meta se necessário
+            syncWithGoalProducts(name, cost, price);
+        }
+    } else {
+        // Modo criação
+        const newProduct = {
+            id: Date.now(),
+            name: name,
+            category: category,
+            price: parseFloat(price),
+            cost: parseFloat(cost) || 0,
+            stock: parseInt(stock),
+            minStock: 5,
+            createdAt: new Date().toISOString()
+        };
+        
+        appState.products.push(newProduct);
+        saveAppData();
+        loadProducts();
+        resetProductForm();
+        showNotification(`Produto "${name}" adicionado com sucesso!`, "success");
+        
+        // Sincronizar com produtos de meta se necessário
+        syncWithGoalProducts(name, cost, price);
+    }
+}
+
+// Confirmar exclusão de produto
+function confirmDeleteProduct(productId) {
+    const product = appState.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    // Criar modal de confirmação
+    const modalHtml = `
+        <div class="modal show" id="deleteConfirmModal">
+            <div class="modal-content">
+                <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+                <p>Tem certeza que deseja excluir o produto <strong>"${product.name}"</strong>?</p>
+                <p style="color: var(--danger); margin-top: 1rem;">
+                    <i class="fas fa-warning"></i> Esta ação não pode ser desfeita!
+                </p>
+                <div class="modal-actions">
+                    <button onclick="hideDeleteConfirmModal()" class="secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button onclick="deleteProduct(${productId})" class="danger">
+                        <i class="fas fa-trash"></i> Excluir Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar modal ao corpo
+    const modalDiv = document.createElement('div');
+    modalDiv.innerHTML = modalHtml;
+    document.body.appendChild(modalDiv);
+}
+
+// Esconder modal de confirmação
+function hideDeleteConfirmModal() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Excluir produto definitivamente
+function deleteProduct(productId) {
+    const product = appState.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const productName = product.name;
+    
+    // Verificar se o produto tem vendas associadas
+    const hasSales = appState.sales.some(sale => sale.productId === productId);
+    
+    if (hasSales) {
+        showNotification(`O produto "${productName}" tem vendas associadas e não pode ser excluído.`, "warning");
+        hideDeleteConfirmModal();
+        return;
+    }
+    
+    // Remover produto
+    appState.products = appState.products.filter(p => p.id !== productId);
+    saveAppData();
+    loadProducts();
+    hideDeleteConfirmModal();
+    showNotification(`Produto "${productName}" excluído com sucesso!`, "success");
+    
+    // Remover também dos produtos de meta se existir
+    const goalProductIndex = goalState.goalProducts.findIndex(p => p.name === productName);
+    if (goalProductIndex !== -1) {
+        goalState.goalProducts.splice(goalProductIndex, 1);
+        saveGoalData();
+        updateGoalProductsDisplay();
+        updateGoalDisplay();
+    }
+}
+        // Sincronizar produto com sistema de metas
+        function syncWithGoalProducts(name, cost, price) {
+            // Verificar se já existe nos produtos de meta
+            const existingGoalProduct = goalState.goalProducts.find(p => p.name === name);
+            
+            if (!existingGoalProduct && cost > 0 && price > 0) {
+                // Perguntar se quer adicionar ao sistema de metas
+                if (confirm(`Deseja adicionar "${name}" ao cálculo de lucro das metas?`)) {
+                    const profit = price - cost;
+                    const margin = (profit / price) * 100;
+                    
+                    goalState.goalProducts.push({
+                        id: Date.now(),
+                        name,
+                        cost,
+                        price,
+                        profitPerUnit: profit,
+                        margin,
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    saveGoalData();
+                    updateGoalProductsDisplay();
+                    updateGoalDisplay();
+                    
+                    showNotification(`Produto "${name}" adicionado ao cálculo de lucro!`, "success");
+                }
+            }
         }
 
         function updateProductStock(productId, quantity) {
@@ -2501,45 +3830,90 @@
             }
         }
 
-        function updateProductsGrid() {
-            dom.productsList.innerHTML = '';
-            
-            if (appState.products.length === 0) {
-                dom.productsList.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                        <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
-                        <h3>Nenhum produto cadastrado</h3>
-                        <p>Adicione seus produtos para começar a vender</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            appState.products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-image">
-                        <i class="fas fa-${getProductIcon(product.category)}"></i>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">R$ ${product.price.toFixed(2)}</div>
-                        <div class="product-stock ${product.stock <= product.minStock ? 'stock-low' : ''}">
-                            Estoque: ${product.stock} ${product.stock <= product.minStock ? '⚠️ Baixo' : ''}
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem;">
-                            Custo: R$ ${product.cost ? product.cost.toFixed(2) : '0.00'}
-                        </div>
-                        <button onclick="editProduct(${product.id})" style="margin-top: 0.5rem; padding: 8px 12px; font-size: 0.9rem;">
-                            <i class="fas fa-edit"></i> Editar
-                        </button>
-                    </div>
-                `;
-                dom.productsList.appendChild(card);
-            });
-        }
+  function updateProductsGrid() {
+    dom.productsList.innerHTML = '';
+    
+    if (appState.products.length === 0) {
+        dom.productsList.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                <i class="fas fa-box-open fa-3x" style="color: var(--gray); margin-bottom: 1rem;"></i>
+                <h3>Nenhum produto cadastrado</h3>
+                <p>Adicione seus produtos para começar a vender</p>
+            </div>
+        `;
+        return;
+    }
+    
+    appState.products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-image">
+                <i class="fas fa-${getProductIcon(product.category)}"></i>
+            </div>
+            <div class="product-info">
+                <div class="product-name">${product.name}</div>
+                <div class="product-price">R$ ${product.price.toFixed(2)}</div>
+                <div class="product-stock ${product.stock <= product.minStock ? 'stock-low' : ''}">
+                    Estoque: ${product.stock} ${product.stock <= product.minStock ? '⚠️ Baixo' : ''}
+                </div>
+                <div style="font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem;">
+                    Custo: R$ ${product.cost ? product.cost.toFixed(2) : '0.00'}
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                    <button onclick="showEditProductModal(${product.id})" class="btn-small info" style="flex: 1;">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button onclick="confirmDeleteProduct(${product.id})" class="btn-small danger" style="flex: 1;">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        `;
+        dom.productsList.appendChild(card);
+    });
+}
 
+// Mostrar modal para editar produto
+function showEditProductModal(productId) {
+    const product = appState.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    // Preencher o formulário atual com os dados do produto
+    dom.productName.value = product.name;
+    dom.productCategory.value = product.category;
+    dom.productPrice.value = product.price;
+    dom.productCost.value = product.cost || 0;
+    dom.productStock.value = product.stock;
+    
+    // Mudar o texto do botão
+    dom.addProductBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+    dom.addProductBtn.dataset.editId = productId;
+    
+    // Rolar até o formulário
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    
+    // Focar no primeiro campo
+    dom.productName.focus();
+    
+    showNotification(`Editando produto: ${product.name}`, "info");
+}
+
+// Cancelar edição
+function cancelEdit() {
+    dom.addProductBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar Produto';
+    delete dom.addProductBtn.dataset.editId;
+    resetProductForm();
+}
+
+// Resetar formulário de produto
+function resetProductForm() {
+    dom.productName.value = '';
+    dom.productCategory.value = 'bebidas';
+    dom.productPrice.value = '';
+    dom.productCost.value = '';
+    dom.productStock.value = '10';
+}
         function getProductIcon(category) {
             const icons = {
                 'bebidas': 'wine-bottle',
@@ -2549,6 +3923,143 @@
                 'outros': 'box'
             };
             return icons[category] || 'box';
+        }
+
+        // Registrar venda com pagamento misto
+        function registerMixedPaymentSale() {
+            const productId = parseInt(dom.productSelect.value);
+            const quantity = parseInt(dom.quantityInput.value) || 1;
+            const totalSale = parseFloat(dom.saleTotal.value) || 0;
+
+            // Validações
+            if (!productId) {
+                showNotification("Selecione um produto", "danger");
+                return false;
+            }
+
+            if (quantity <= 0) {
+                showNotification("Quantidade inválida", "danger");
+                return false;
+            }
+
+            if (totalSale <= 0) {
+                showNotification("Valor da venda inválido", "danger");
+                return false;
+            }
+
+            if (mixedPaymentMethods.length === 0) {
+                showNotification("Adicione pelo menos uma forma de pagamento", "danger");
+                return false;
+            }
+
+            const product = appState.products.find(p => p.id === productId);
+            if (!product) return false;
+
+            if (product.stock < quantity) {
+                showNotification(`Estoque insuficiente de ${product.name}`, "danger");
+                return false;
+            }
+
+            // Calcular total pago
+            let totalPaid = 0;
+            mixedPaymentMethods.forEach(item => {
+                totalPaid += item.amount;
+            });
+
+            const remaining = totalSale - totalPaid;
+            if (remaining > 0) {
+                showNotification(`Falta R$ ${remaining.toFixed(2)} para completar o pagamento`, "warning");
+                return false;
+            }
+
+            // Registrar uma venda principal
+            const mainSale = {
+                id: Date.now(),
+                productId: productId,
+                productName: product.name,
+                quantity: quantity,
+                price: product.price,
+                total: totalSale,
+                paymentMethod: "Pagamento Misto",
+                paymentMethodId: null,
+                machineFee: 0, // Será calculado abaixo
+                date: new Date().toISOString(),
+                isMixedPayment: true,
+                mixedPaymentDetails: []
+            };
+
+            // Calcular taxas e adicionar detalhes
+            let totalMachineFee = 0;
+            mixedPaymentMethods.forEach(item => {
+                if (item.amount > 0) {
+                    const paymentMethod = appState.paymentMethods.find(p => p.id === item.methodId);
+                    if (paymentMethod) {
+                        const machineFee = paymentMethod.fee > 0 ? (item.amount * paymentMethod.fee / 100) : 0;
+                        totalMachineFee += machineFee;
+                        
+                        // Adicionar ao detalhe da venda mista
+                        mainSale.mixedPaymentDetails.push({
+                            methodId: paymentMethod.id,
+                            methodName: paymentMethod.name,
+                            amount: item.amount,
+                            fee: machineFee
+                        });
+                        
+                        // Atualizar total da forma de pagamento
+                        paymentMethod.total += item.amount;
+                    }
+                }
+            });
+
+            // Atualizar taxa da maquininha na venda principal
+            mainSale.machineFee = totalMachineFee;
+            
+            // Adicionar venda ao histórico
+            appState.sales.push(mainSale);
+
+            // Atualizar estoque
+            updateProductStock(productId, quantity);
+            
+            saveAppData();
+            
+            // Efeitos visuais e sonoros
+            if (appState.settings.animations) {
+                playSaleAnimation();
+            }
+            
+            if (appState.settings.saleSounds) {
+                playSaleSound();
+            }
+            
+            // Atualizar dashboard e metas
+            updateDashboard();
+            updateGoalDisplay();
+            
+            // Resetar formulário
+            resetSaleForm();
+            
+            // Mostrar resumo da venda
+            let summary = `Venda registrada: ${product.name} x${quantity}<br>`;
+            summary += `Total: R$ ${totalSale.toFixed(2)}<br>`;
+            summary += `Formas de pagamento:<br>`;
+            mixedPaymentMethods.forEach(item => {
+                if (item.amount > 0) {
+                    summary += `- ${item.methodName}: R$ ${item.amount.toFixed(2)}<br>`;
+                }
+            });
+            
+            showNotification(summary, "success");
+            return true;
+        }
+
+        // Resetar formulário de venda
+        function resetSaleForm() {
+            dom.productSelect.value = '';
+            dom.quantityInput.value = '1';
+            dom.priceInput.value = '';
+            dom.saleTotal.value = '0.00';
+            mixedPaymentMethods = [];
+            updateMixedPaymentDisplay();
         }
 
         // Formas de Pagamento
@@ -2674,6 +4185,7 @@
             saveAppData();
             loadCosts();
             updateDashboard();
+            updateGoalDisplay();
             showNotification(`Custo "${description}" adicionado com sucesso!`, "success");
         }
 
@@ -2684,6 +4196,7 @@
                 saveAppData();
                 loadCosts();
                 updateDashboard();
+                updateGoalDisplay();
                 showNotification("Custo excluído com sucesso!", "success");
             }
         };
@@ -2708,6 +4221,7 @@
             dom.cmvResult.style.display = 'block';
             
             updateDashboard();
+            updateGoalDisplay();
             
             showNotification(`CMV calculado: R$ ${cmv.toFixed(2)}`, "success");
         }
@@ -2978,6 +4492,11 @@
                         
                         ESTOQUE ATUAL:
                         ${appState.products.map(p => `- ${p.name}: ${p.stock} unidades (Custo: R$ ${p.cost ? p.cost.toFixed(2) : '0.00'})`).join('\n')}
+                        
+                        META DIÁRIA:
+                        - Meta Atual: R$ ${goalState.dailyGoal.toFixed(2)}
+                        - Lucro Hoje: R$ ${calculateTodayProfit().toFixed(2)}
+                        - Progresso: ${goalState.dailyGoal > 0 ? ((calculateTodayProfit() / goalState.dailyGoal) * 100).toFixed(1) : 0}%
                     `;
                     
                     downloadFile(report, 'relatorio-financeiro.txt', 'text/plain');
@@ -2987,7 +4506,7 @@
             showNotification(`Dados exportados com sucesso!`, "success");
         }
 
-        function exportToCSV(data, filename) {
+        function exportToCSV(data, filename, contentType) {
             if (data.length === 0) {
                 showNotification("Nenhum dado para exportar", "warning");
                 return;
@@ -3182,26 +4701,40 @@
             dom.calculateCMVBtn.addEventListener('click', calculateCMV);
             
             // Produtos
-            dom.addProductBtn.addEventListener('click', () => {
-                const name = dom.productName.value.trim();
-                const category = dom.productCategory.value;
-                const price = dom.productPrice.value;
-                const cost = dom.productCost.value;
-                const stock = dom.productStock.value;
-                
-                if (!name || !price || !stock) {
-                    showNotification("Preencha todos os campos obrigatórios", "danger");
-                    return;
-                }
-                
-                addProduct(name, category, price, cost, stock);
-                
-                dom.productName.value = '';
-                dom.productPrice.value = '';
-                dom.productCost.value = '';
-                dom.productStock.value = '10';
-            });
-            
+          // Produtos
+dom.addProductBtn.addEventListener('click', () => {
+    const name = dom.productName.value.trim();
+    const category = dom.productCategory.value;
+    const price = dom.productPrice.value;
+    const cost = dom.productCost.value;
+    const stock = dom.productStock.value;
+    
+    if (!name || !price || !stock) {
+        showNotification("Preencha todos os campos obrigatórios", "danger");
+        return;
+    }
+    
+    addProduct(name, category, price, cost, stock);
+});
+
+// Adicionar botão de cancelar edição no HTML (adicione após o botão Adicionar Produto)
+// Adicione este HTML na seção de produtos, após o botão "Adicionar Produto":
+/*
+<div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+    <button id="addProductBtn">
+        <i class="fas fa-plus"></i> Adicionar Produto
+    </button>
+    <button id="cancelEditBtn" class="secondary" style="display: none;">
+        <i class="fas fa-times"></i> Cancelar Edição
+    </button>
+</div>
+*/
+
+// E no setupEventListeners():
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+if (cancelEditBtn) {
+    cancelEditBtn.addEventListener('click', cancelEdit);
+}
             // Configurações do negócio
             dom.saveBusinessInfoBtn.addEventListener('click', () => {
                 const name = dom.businessNameInput.value.trim();
@@ -3269,6 +4802,11 @@
                 saveAppData();
             });
             
+            dom.goalNotificationsToggle.addEventListener('change', (e) => {
+                goalState.settings.notifications = e.target.checked;
+                saveGoalData();
+            });
+            
             // Gerenciamento de dados
             dom.backupDataBtn.addEventListener('click', () => {
                 const backup = {
@@ -3280,6 +4818,7 @@
                     cmv: appState.cmv,
                     settings: appState.settings,
                     users: appState.users,
+                    goalData: goalState,
                     backupDate: new Date().toISOString()
                 };
                 
@@ -3312,12 +4851,18 @@
                                 appState.settings = backup.settings || appState.settings;
                                 appState.users = backup.users || appState.users;
                                 
+                                if (backup.goalData) {
+                                    goalState = backup.goalData;
+                                }
+                                
                                 saveAppData();
+                                saveGoalData();
                                 updateBusinessInfo();
                                 loadProducts();
                                 loadPaymentMethods();
                                 loadCosts();
                                 updateDashboard();
+                                updateGoalDisplay();
                                 updateFinanceChart();
                                 
                                 showNotification("Backup restaurado com sucesso!", "success");
@@ -3368,6 +4913,9 @@
             
             if (sectionId === 'dashboard') {
                 updateDashboard();
+                updateGoalDisplay();
+            } else if (sectionId === 'goals') {
+                updateGoalDisplay();
             } else if (sectionId === 'finance') {
                 updateFinanceChart();
             } else if (sectionId === 'payment-methods') {
@@ -3406,6 +4954,18 @@
         window.removeMixedPaymentMethod = removeMixedPaymentMethod;
         window.updateMixedPaymentAmount = updateMixedPaymentAmount;
         window.updateMixedPaymentMethod = updateMixedPaymentMethod;
+
+        // Funções globais para sistema de metas
+        window.showGoalModal = showGoalModal;
+        window.hideGoalModal = hideGoalModal;
+        window.saveDailyGoal = saveDailyGoal;
+        window.setDailyGoal = setDailyGoal;
+        window.showProductModal = showProductModal;
+        window.hideProductModal = hideProductModal;
+        window.saveGoalProduct = saveGoalProduct;
+        window.editGoalProduct = editGoalProduct;
+        window.deleteGoalProduct = deleteGoalProduct;
+        window.updateGoalDisplay = updateGoalDisplay;
 
         // Inicializar aplicativo
         document.addEventListener('DOMContentLoaded', initApp);
