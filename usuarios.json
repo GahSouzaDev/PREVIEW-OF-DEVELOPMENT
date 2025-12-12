@@ -38,8 +38,8 @@
     },
     {
       "id": 4,
-      "username": "teste",
-      "password": "teste123456789",
+      "username": "evans",
+      "password": "12345evans12345",
       "nome": "Usuário Teste",
       "role": "vendedor",
       "ativo": true,
