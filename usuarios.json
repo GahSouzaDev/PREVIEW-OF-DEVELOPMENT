@@ -44,9 +44,9 @@
       "role": "vendedor",
       "ativo": true,
       "bloqueado": true,
-      "data_criacao": "2024-02-10",
+      "data_criacao": "2025-12-12",
       "ultimo_acesso": null,
-      "mensagem_acesso": "SEU ACESSO FOI BLOQUEADO! Entre em contato com o administrador."
+      "mensagem_acesso": "Acesso liberado para vendas"
     }
   ],
   "configuracoes": {
